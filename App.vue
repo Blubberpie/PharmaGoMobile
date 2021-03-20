@@ -1,7 +1,7 @@
 <template>
   <view class="container">
-    <!-- <register/> -->
-    <driver />
+    <register/>
+    <!-- <driver /> -->
     <!-- <text class="text-color-primary">My Vue Native App</text> -->
     <!-- <button title="Press me!" @press="exclaim" /> -->
      <!-- <touchable-opacity :on-press="onPressButton">
