@@ -9,29 +9,33 @@
         <scroll-view :content-container-style="{contentContainer: {
         paddingVertical: 20
     }}">
-        <view :style="{padding:10}" v-for="(task, index) in tasks" :key="index">
-            <view class='border'>
-            <image :style="{width: 40,height: 40,borderRadius: 25, marginRight: 8}"
+        <view :style="{padding:10,backgroundColor:''}" v-for="(task, index) in tasks" :key="index">
+            <touchable-opacity class='card'>
+                <view :style="{alignItems:'flex-end', backgroundColor:''}">
+                <text :style="{color:'#5b5b5b'}">123 km</text>
+                </view>
+            <view :style="{flexDirection: 'row',backgroundColor:''}">
+            <image :style="{width: 40,height: 40,borderRadius: 25, marginRight:8}"
             :source="{uri: task.imageSrc}"/>
             <!-- <text>{{task.description}}</text> -->
-            <view :style="{flexDirection: 'column'}">
+            <view :style="{flexDirection: 'column',backgroundColor:''}">
             <text :style="{fontSize:16,fontWeight: 'bold',color:'#5b5b5b'}">{{task.title}}</text>
-            <text>{{task.description}}</text>
+            <text :style="{color:'#5b5b5b'}">{{task.description}}</text>
             </view>
-            <view :style="{flexDirection: 'row'}">
+            </view>
+            </touchable-opacity>
+            <!-- <view :style="{flexDirection: 'row'}">
             <touchable-opacity :style="{ marginLeft:80}" :on-press="() => apply()">
       <image :style="{width: 43,height: 43,borderRadius: 35, marginRight: 8,
        marginBottom: 0,}"
             :source="{uri: 'https://i.pinimg.com/originals/b8/85/10/b88510e4e0a7c0457e16495880546429.png'}"/>
-        <!-- <text :style="{color: 'white'}">Register</text> -->
     </touchable-opacity>
     <touchable-opacity :style="{}" :on-press="() => getLocation(task.address)">
       <image :style="{width: 25,height: 25,borderRadius: 25,}"
             :source="{uri: 'https://i.pinimg.com/originals/f7/e0/45/f7e04570aedfd8a78f8e49e2eaded974.png'}"/>
-        <!-- <text :style="{color: 'white'}">Register</text> -->
     </touchable-opacity>
-            </view>
-            </view>
+            </view> -->
+            <!-- </view> -->
             <!-- <text>{{task.description}}</text> -->
         </view>
         </scroll-view>
@@ -56,7 +60,7 @@ export default {
             {
               'title' : 'B pharmacy',
                'imageSrc' : 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT04s_fztbv3ncwe0O_x5tbAmgLZCsPKorMzw&usqp=CAU',
-               'description' : 'Good quality',
+               'description' : 'I love you so much I love you sodasdasd asda asd ads xdas asd',
                'address' : 'Bangkok', 
             },{
               'title' : 'C pharmacy',
@@ -102,7 +106,7 @@ export default {
             );
         },
         apply() {
-            Alert.alert("Your process completed", 'Please pick up the prescription from pharmacy and delivery to customer')
+            Alert.alert("Your delivery assigned", 'Please pick up the prescription from pharmacy and delivery to customer')
         }
     }
 };
@@ -110,7 +114,7 @@ export default {
 <style scoped>
 .text{
     /* font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif; */
-    color:white;
+    color:#bdb8b8;
     font-size:  22px;
     font-weight: bold;
     padding-bottom: 50;
@@ -122,7 +126,7 @@ export default {
   /* background-color: red; */
   /* align-items: center; */
   /* justify-content: center; */
-  background-color: #89D5D2;
+  background-color: white;
   padding-top: 100;
   /* flex: 1; */
 }
@@ -134,15 +138,15 @@ export default {
     /* background-color:red; */
     /* margin-top: 100; */
 }
-.border {
+.card {
     /* border-bottom-width: 1; */
     /* border-color: red; */
-    width: 350;
-    height: 100;
-    padding: 30;
-    background-color:white;
+    width: 380;
+    height: 120;
+    padding: 10;
+    background-color:#efefef;
     border-radius: 15;
-    flex-direction: row;
-    align-items: center;
+    /* flex-direction: row; */
+    /* align-items: center; */
 }
 </style>
