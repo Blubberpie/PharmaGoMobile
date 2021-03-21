@@ -9,17 +9,18 @@
 export default {
   data() {
     return {
-      message: ""
+      message: '',
     };
   },
   mounted() {
-    this.message = "Hello World"; // testing mounted
+    this.message = 'Hello World'; // testing mounted
   },
   methods: {
     exclaim() {
-      this.message += "!";
+      this.message += '!';
+      // eslint-disable-next-line no-alert
       alert(this.message);
-    }
+    },
   },
 };
 </script>
