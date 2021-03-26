@@ -1,12 +1,18 @@
 <template>
   <view class="container">
-    <text class="text-color-primary">My Vue Native App</text>
-    <button title="Press me!" @press="exclaim" />
+    <driver-job/>
+    <!-- <text class="text-color-primary">My Vue Native App</text> -->
+    <!-- <button title="Press me!" @press="exclaim" /> -->
   </view>
 </template>
 
 <script>
+import DriverJob from './src/components/DriverJob';
+// import DriverJob from './src/components/DriverJob.vue';
+import './src/plugins/firebase';
+
 export default {
+  components:{ DriverJob},
   data() {
     return {
       message: '',
