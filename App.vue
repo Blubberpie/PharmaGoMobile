@@ -18,12 +18,14 @@ import {
 import ChatPage from "./src/views/ChatPage.vue";
 import ListChatPage from "./src/views/ListChatPage.vue";
 import HomePage from "./src/views/HomePage.vue";
+import CustomerMap from "./src/components/CustomerMap.vue";
 
 const StackNavigator = createStackNavigator(
   {
     Chat: ChatPage,
     ListChat: ListChatPage,
     Home: HomePage,
+    CustomerMap,
   },
   {
     initialRouteName: 'Home',

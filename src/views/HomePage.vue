@@ -2,6 +2,7 @@
   <view class="container">
     <text class="text-color-primary">Home Page</text>
     <button title="Press me!" @press="exclaim" />
+    <button title="Map Page" @press="toMapPage" />
   </view>
 </template>
 
@@ -16,11 +17,19 @@ export default {
   mounted() {
     this.message = 'Hello World'; // testing mounted
   },
+  props: {
+    navigation: {
+      type: Object,
+    },
+  },
   methods: {
     exclaim() {
       this.message += '!';
       // eslint-disable-next-line no-alert
       alert(this.message);
+    },
+    toMapPage() {
+      this.navigation.navigate('CustomerMap');
     },
   },
 };
