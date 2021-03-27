@@ -7,18 +7,19 @@
 </template>
 
 <script>
+import './src/plugins/firebase';
 // declare module 'vue-native-router';
 import {
   createAppContainer,
   createStackNavigator,
-} from "vue-native-router";
+} from 'vue-native-router';
 
 // const VueNativeRouter = require('vue-native-router');
 
-import ChatPage from "./src/views/ChatPage.vue";
-import ListChatPage from "./src/views/ListChatPage.vue";
-import HomePage from "./src/views/HomePage.vue";
-import CustomerMap from "./src/components/CustomerMap.vue";
+import ChatPage from './src/views/ChatPage.vue';
+import ListChatPage from './src/views/ListChatPage.vue';
+import HomePage from './src/views/HomePage.vue';
+import CustomerMap from './src/components/CustomerMap.vue';
 
 const StackNavigator = createStackNavigator(
   {
@@ -29,7 +30,7 @@ const StackNavigator = createStackNavigator(
   },
   {
     initialRouteName: 'Home',
-  }
+  },
 );
 
 const AppNavigator = createAppContainer(StackNavigator);
