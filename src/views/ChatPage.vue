@@ -15,7 +15,7 @@
       <!-- <button title="Press me!" @press="test" />
       <text class="text-color-primary">{{ testing }}</text> -->
     </view>
-    <view :style='{height: 500}'>
+    <view :style='{height: 600}'>
     <scroll-view :content-container-style="{contentContainer: {flex:1, height:10}}">
       <flat-list :data='messages' :render-item="(message) => renderMessage(message)">
       </flat-list>
@@ -46,7 +46,7 @@
         class="message-box"
         placeholder="Type Message"
       />
-      <touchable-opacity :on-press="()=>test()" :disabled="(text == '')">
+      <touchable-opacity :on-press="()=>send()" :disabled="(text == '')">
             <view  class="button-view">
               <text class="color-white">Send</text>
             </view>
@@ -105,7 +105,7 @@ import { Ionicons } from "@expo/vector-icons";
 import firebase from '../plugins/firebase';
 import React, {Component} from 'react';
 import {
-View, Dimensions, Text
+View, Dimensions, Text, KeyboardAvoidingView 
 } from 'react-native';
 
 export default {
@@ -130,10 +130,21 @@ export default {
         // <View  key={message.item.time}>
         <View>
           <View style={{flexDirection:message.item.from == this.username ? 'row-reverse':'row'}}>
-          <Text class="dot">u</Text>
+            <View style={{flexDirection:message.item.from == this.username ? 'row-reverse':'row'}}>
+              <Text style={{
+                paddingTop: 2,
+                textAlign: 'center',
+                margin:5,
+                height: 26,
+                width: 26,
+                borderRadius:13,
+                backgroundColor: '#bbb',
+              }}>{ message.item.from[0] }</Text>
+            </View>
+          
             <View style={{
               backgroundColor:'lightblue',
-              // width:Dimensions.get('screen').width/2,
+              maxWidth:Dimensions.get('screen').width/1.5,
               borderRadius:10,
               padding:10,
               margin:5,
@@ -251,8 +262,10 @@ export default {
   padding: 10;
   border-radius: 10;
   width: 300;
+  /* flex: 1; */
 }
 .username {
+  /* text-align: center; */
   font-size: 20;
 }
 .text-bold {
@@ -310,14 +323,5 @@ export default {
 }
 .bf {
   background-color: #5c5c3d;
-}
-.dot {
-  text-align: center;
-  /* text-justify: center; */
-  height: 26px;
-  width: 26px;
-  /* background-color: #bbb; */
-  /* border-radius: 13px; */
-  /* display: inline-block; */
 }
 </style>
