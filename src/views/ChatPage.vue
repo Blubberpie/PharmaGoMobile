@@ -221,7 +221,7 @@ export default {
       //     .ref(`user/${this.uid}/credentials/username`)
       //     .once('value')
       //     .then((snapshot) => snapshot.val());
-      alert(this.messages);
+      alert(testing);
       // alert(username);
     },
   },
