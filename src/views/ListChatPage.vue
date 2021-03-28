@@ -1,27 +1,144 @@
 <template>
   <view class="container">
-    <text class="text-color-primary">List Chat Page</text>
-    <button title="Press me!" @press="exclaim" />
+    <text class="text-color-primary">List Chat Pageee</text>
+    <button title="Press me!" @press="test" />
+    <text class="text-color-primary">{{ testing }}</text>
   </view>
+  <!-- <div>
+    <v-container>
+      <Chat v-if="currentRoomID" :roomID="currentRoomID" :username="username" ref="chat" />
+    </v-container>
+    <v-container>
+      <v-navigation-drawer :width="400" absolute permanent right>
+        <div v-if="uid">
+          <v-card class="text-center" tile>
+            <v-list dense>
+              <v-card-title>Customers</v-card-title>
+              <v-list-item-group color="primary">
+                <v-list-item v-for="(room, i) in rooms" :key="i">
+                  <v-list-item-content>
+                    <v-list-item-title
+                      v-text="room.member"
+                      @click="setCurrentRoomID(room.id)"
+                    ></v-list-item-title>
+                  </v-list-item-content>
+                </v-list-item>
+              </v-list-item-group>
+            </v-list>
+          </v-card>
+        </div>
+      </v-navigation-drawer>
+    </v-container>
+  </div> -->
 </template>
 
 <script>
+import firebase from '../plugins/firebase';
 
 export default {
   data() {
     return {
-      message: '',
+      rooms: [],
+      otherMember: '',
+      roomIDs: [],
+      uid: '',
+      currentRoomID: '',
+      username: '',
+      testing: '',
+      database: null,
     };
   },
-  mounted() {
-    this.message = 'Hello World'; // testing mounted
-  },
   methods: {
-    exclaim() {
-      this.message += '!';
-      // eslint-disable-next-line no-alert
-      alert(this.message);
+    setCurrentRoomID(id) {
+      this.currentRoomID = id;
     },
+    async getAllUsersChatRooms() {
+      const rooms = [];
+      let val = {};
+
+      await firebase
+        .database()
+        .ref(`user/${this.uid}/chatRooms`)
+        .once('value')
+        .then((snapshot) => {
+          val = snapshot.val();
+          Object.keys(val).forEach((key) => {
+            rooms.push(val[key]);
+          });
+        });
+      this.roomIDs = rooms;
+      return rooms;
+    },
+    async getOtherRoomMember(id) {
+      let members = {};
+      await firebase
+        .database()
+        .ref(`messages/chatRooms/${id}/members`)
+        .once('value')
+        .then((snapshot) => {
+          const obj = snapshot.val();
+          members = Object.values(obj);
+        });
+      const otherMember = members.filter(
+        (member) => member !== this.username
+      )[0];
+      this.otherMember = otherMember;
+      return otherMember;
+    },
+    async setAllRooms() {
+      this.roomIDs = await this.getAllUsersChatRooms();
+      //   const newID = this.$route.params.roomID;
+      alert('got');
+
+      const newID = null;
+      if (newID) {
+        this.setCurrentRoomID(newID);
+      } else {
+        this.setCurrentRoomID(this.roomIDs[0]);
+      }
+      this.roomIDs.forEach(async (roomID) => {
+        const member = await this.getOtherRoomMember(roomID);
+        this.rooms.push({
+          member,
+          id: roomID,
+        });
+      });
+    },
+    async setUsername() {
+      const username = await firebase
+        .database()
+        .ref(`user/${this.uid}/credentials/username`)
+        .once('value')
+        .then((snapshot) => snapshot.val());
+      this.username = username;
+    },
+    async test() {
+      // alert(this.roomIDs);
+      // const username = await firebase.database()
+      //     .ref(`user/${this.uid}/credentials/username`)
+      //     .once('value')
+      //     .then((snapshot) => snapshot.val());
+      this.testing = this.roomIDs;
+      // alert(username);
+    },
+  },
+  async mounted() {
+    // this.uid = firebase.auth().currentUser.uid;
+
+    this.uid = 'eSfIbpVKbPZVGVVaYeGdZ3ZicsV2'; // need to be uid that has chatroom
+    await this.setUsername();
+    // alert(this.username);
+    await this.setAllRooms();
+    this.roomIDs.forEach((roomID) => {
+      firebase
+        .database()
+        .ref(`messages/chatRooms/${roomID}/messages`)
+        .on('value', () => {
+          // console.log(`theres an update in room: ${roomID}`, dataSnapshot.val());
+          this.$refs.chat.listAllMessages(); // need fixing
+        });
+    });
+    alert('mounted');
   },
 };
 </script>
