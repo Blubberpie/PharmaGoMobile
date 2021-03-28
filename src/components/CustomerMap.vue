@@ -95,68 +95,7 @@ export default {
   },
   data() {
     return {
-      pharmacies: {
-        '-MVk2EVqYH8dEPnTD5-U': {
-          address: '18 Ratchadamnoen Nok Rd, Bang Khun Phrom, Phra Nakhon, Krung Thep Maha Nakhon 10200, Thailand',
-          description: 'Good quality...',
-          location: {
-            lat: 13.760502698226656,
-            lng: 100.50810555219532,
-          },
-          name: 'Good Pharmacy',
-          owner: 'GVvPLsMTwoNdjt6r4J3F6NDvgwl1',
-        },
-        '-MVk2skXtgZxNuiNuCYf': {
-          address: 'Suan Chitralada Palace, Rat Withi Road, Suan Chittralada, Khet Dusit, Bangkok, 10300, แขวง สวนจิตรลดา เขตดุสิต กรุงเทพมหานคร 10300, Thailand',
-          description: 'r/ihavereddit r/ihavereddit r/ihavereddit r/ihavereddit r/ihavereddit r/ihavereddit r/ihavereddit r/ihavereddit r/ihavereddit r/ihavereddit r/ihavereddit r/ihavereddit r/ihavereddit r/ihavereddit r/ihavereddit r/ihavereddit r/ihavereddit r/ihavereddit r/ihavereddit r/ihavereddit r/ihavereddit r/ihavereddit r/ihavereddit r/ihavereddit r/ihavereddit r/ihavereddit r/ihavereddit',
-          location: {
-            lat: 13.770045015645296,
-            lng: 100.5216617577553,
-          },
-          name: 'KarmaPharma',
-          owner: 'GVvPLsMTwoNdjt6r4J3F6NDvgwl1',
-        },
-        '-MVk309vbIfBuFMl_cRT': {
-          address: '273 Samsen Rd, Khwaeng Wat Sam Phraya, Khet Phra Nakhon, Krung Thep Maha Nakhon 10200, Thailand',
-          description: 'nice nice nice nice nice nice nice nice nice nice nice nice nice nice nice nice nice nice nice nice nice nice nice nice nice nice nice nice nice nice nice nice nice nice nice nice nice nice nice nice nice nice nice nice nice nice nice nice nice nice nice nice nice nice nice nice ',
-          location: {
-            lat: 13.767740000360437,
-            lng: 100.50121796064379,
-          },
-          name: 'WeedPharma',
-          owner: 'GVvPLsMTwoNdjt6r4J3F6NDvgwl1',
-        },
-        '-MVk4z6wEWaamUVbFAwV': {
-          address: '50 Thanon Suppha Mit, Khwaeng Wat Sommanat, Khet Pom Prap Sattru Phai, Krung Thep Maha Nakhon 10100, Thailand',
-          description: 'yee yee yee yee yee yee yee yee yee yee yee yee yee yee yee yee yee yee yee yee yee yee yee yee yee yee yee yee yee yee yee yee yee yee yee yee yee yee yee yee yee yee yee yee yee yee yee yee yee yee yee yee yee yee yee yee ',
-          location: {
-            lat: 13.758188311075239,
-            lng: 100.51351052455904,
-          },
-          name: 'Farmacy',
-          owner: 'GVvPLsMTwoNdjt6r4J3F6NDvgwl1',
-        },
-        '-MVk5DnIEe9rzZUgyY3a': {
-          address: '4 ซอย ราชินี Khwaeng Phra Borom Maha Ratchawang, Khet Phra Nakhon, Krung Thep Maha Nakhon 10200, Thailand',
-          description: 'actual pharmacy description \nSIKE yeet yeet yeet yeet yeet yeet yeet yeet yeet yeet yeet yeet yeet yeet yeet yeet yeet yeet yeet yeet yeet yeet yeet yeet yeet yeet yeet yeet yeet yeet yeet yeet ',
-          location: {
-            lat: 13.7585121,
-            lng: 100.493434,
-          },
-          name: 'Actual Pharmacy',
-          owner: 'GVvPLsMTwoNdjt6r4J3F6NDvgwl1',
-        },
-        '-MW3JhfH0Rw2tqIBmGuQ': {
-          address: '26 Ratchadamnoen Avenue, Khwaeng Wat Bowon Niwet, Khet Phra Nakhon, Krung Thep Maha Nakhon 10200, Thailand',
-          description: 'Some desc',
-          location: {
-            lat: 13.7572627,
-            lng: 100.4974528,
-          },
-          name: 'Some place ',
-          owner: 'GVvPLsMTwoNdjt6r4J3F6NDvgwl1',
-        },
-      },
+      pharmacies: {},
       markers: [],
       pharmaciesRef: null,
       initialRegion: BANGKOK_REGION,
@@ -172,13 +111,13 @@ export default {
   created() {
     this.pharmaciesRef = database.ref('/registered-pharmacies');
   },
-  mounted() {
-    // this.setPharmacies();
+  async mounted() {
+    await this.setPharmacies();
     this.createMarkers();
   },
   methods: {
-    setPharmacies() {
-      this.pharmaciesRef.on('value', (pharmaciesSnap) => {
+    async setPharmacies() {
+      await this.pharmaciesRef.on('value', (pharmaciesSnap) => {
         const pharms = {};
         pharmaciesSnap.forEach((pharmacy) => {
           pharms[pharmacy.key] = pharmacy.val();
