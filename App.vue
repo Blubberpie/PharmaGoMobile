@@ -3,12 +3,15 @@
     <text class="text-color-primary">My Vue Native App</text>=
     <button title="Press me!" @press="exclaim" />
   </view> -->
-  <app-navigator></app-navigator>
+  <Provider>
+    <app-navigator/>
+  </Provider>
 </template>
 
 <script>
 import './src/plugins/firebase';
 // declare module 'vue-native-router';
+import { Provider } from 'react-native-paper';
 import {
   createAppContainer,
   createStackNavigator,
@@ -38,7 +41,7 @@ const StackNavigator = createStackNavigator(
 const AppNavigator = createAppContainer(StackNavigator);
 
 export default {
-  components: { AppNavigator },
+  components: { AppNavigator, Provider },
   data() {
     return {
       message: '',

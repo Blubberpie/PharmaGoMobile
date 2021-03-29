@@ -1,11 +1,6 @@
 <template>
-  <PortalHost>
-    <!-- <ListItem
-      v-for="(prescription, key) in prescriptions"
-      :key="key"
-      :title="prescription.pharmacyName"
-      :titleStyle="styles.title"
-    /> -->
+  <View>
+    <Title>Manage Your Pending Prescriptions</Title>
     <Card
       v-for="(prescription, key) in prescriptions"
       :key="key"
@@ -16,53 +11,58 @@
         :title="prescription.pharmacyName"
       />
       <CardActions :style="styles.cardAction">
-        <Button mode="contained" dark color="blue" :onPress="showDetails(key)">
-          <Text>Show Details</Text>
-        </Button>
-        <Button mode="contained" dark color="green">
-          <Text>Accept</Text>
-        </Button>
-        <Button mode="contained" dark color="red">
-          <Text>Reject</Text>
-        </Button>
+        <Button title="Show Details" @press="showDetails(key)"/>
+        <Button title="Accept"/>
+        <Button title="Reject"/>
       </CardActions>
     </Card>
     <Portal>
       <Dialog :visible="detailsVisible" :onDismiss="hideDialog">
-        <DialogTitle><Text>asdfasdf</Text></DialogTitle>
+        <DialogTitle><Text>Proposed Medication</Text></DialogTitle>
         <DialogContent>
-          <Text>asdfdfsafsda</Text>
+          <DTable>
+            <DTHeader>
+              <DTTitle>Drug</DTTitle>
+              <DTTitle>Strength</DTTitle>
+              <DTTitle>Frequency</DTTitle>
+              <DTTitle numeric>Quantity</DTTitle>
+            </DTHeader>
+            <DTRow
+              v-for="(medication, key) in selectedPrescription"
+              :key="key"
+            >
+              <DTCell>{{ medication.name }}</DTCell>
+              <DTCell>{{ medication.strength }}</DTCell>
+              <DTCell>{{ medication.frequency }}</DTCell>
+              <DTCell>{{ medication.quantity }}</DTCell>
+            </DTRow>
+            <!-- Doesnt work for now -->
+            <DTPagination
+              :page="currentTablePage"
+              :numberOfPages="Math.ceil(selectedPrescription.length / itemsPerPage)"
+              :onPageChange="(page) => setPage(page)"
+            />
+          </DTable>
         </DialogContent>
-        <DialogActions>
-          <Button onPress={hideDialog}><Text>Done</Text></Button>
-        </DialogActions>
       </Dialog>
     </Portal>
-  </PortalHost>
+  </View>
 </template>
 
 <script>
-// import firebase from 'firebase/app';
-// import 'firebase/database';
+import firebase from 'firebase/app';
+import 'firebase/database';
 import { StyleSheet } from 'react-native';
 import {
-  Button,
   Card,
   Portal,
   Dialog,
+  Title,
+  DataTable,
 } from 'react-native-paper';
 
-// const database = firebase.database();
+const database = firebase.database();
 const styles = StyleSheet.create({
-  container: {
-    ...StyleSheet.absoluteFillObject,
-    justifyContent: 'flex-start',
-    alignItems: 'center',
-  },
-  title: {
-    fontWeight: 'bold',
-    fontSize: 17,
-  },
   cardAction: {
     justifyContent: 'space-between',
   },
@@ -71,18 +71,25 @@ const styles = StyleSheet.create({
   },
 });
 
+const STATUS_PENDING = 1;
+const STATUS_APPROVED = 2;
+
 export default {
   components: {
-    Button,
     Card,
     CardActions: Card.Actions,
     CardTitle: Card.Title,
     Portal,
-    PortalHost: Portal.Host,
     Dialog,
     DialogTitle: Dialog.Title,
     DialogContent: Dialog.Content,
-    DialogActions: Dialog.Actions,
+    Title,
+    DTable: DataTable,
+    DTHeader: DataTable.Header,
+    DTTitle: DataTable.Title,
+    DTRow: DataTable.Row,
+    DTCell: DataTable.Cell,
+    DTPagination: DataTable.Pagination,
   },
   data() {
     return {
@@ -105,12 +112,20 @@ export default {
           status: 1,
         },
         '-MKwiewifoi': {
-          medication: [{
-            frequency: '123234',
-            name: '1243234',
-            quantity: '2343421',
-            strength: '3242341',
-          }],
+          medication: [
+            {
+              frequency: '123234',
+              name: '1243234',
+              quantity: '2343421',
+              strength: '3242341',
+            },
+            {
+              frequency: '123sadf234',
+              name: '12sdaf43234',
+              quantity: '23sf43421',
+              strength: '324f2341',
+            },
+          ],
           patientId: 'eSfIbpVKbPZVGVVaYeGdZ3ZicsV2',
           pharmacyId: {
             pharmacyID: '-MVk4z6wEWaamUVbFAwV',
@@ -124,6 +139,9 @@ export default {
       },
       styles,
       detailsVisible: false,
+      selectedPrescription: [],
+      currentTablePage: 0,
+      itemsPerPage: 4,
     };
   },
   created() {
@@ -133,10 +151,13 @@ export default {
   methods: {
     showDetails(key) {
       this.detailsVisible = true;
-      console.log(key);
+      this.selectedPrescription = this.prescriptions[key].medication;
     },
     hideDialog() {
       this.detailsVisible = false;
+    },
+    setPage(number) {
+      this.currentTablePage = number;
     },
   },
 };
