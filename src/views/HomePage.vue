@@ -3,6 +3,7 @@
     <text class="text-color-primary">Home Page</text>
     <button title="Press me!" @press="exclaim" />
     <button title="Map Page" @press="toMapPage" />
+    <button title="Pending Prescriptions" @press="toPendingPrescriptions" />
   </view>
 </template>
 
@@ -30,6 +31,9 @@ export default {
     },
     toMapPage() {
       this.navigation.navigate('CustomerMap');
+    },
+    toPendingPrescriptions() {
+      this.navigation.navigate('PendingPrescriptions');
     },
   },
 };

@@ -45,7 +45,6 @@ const BANGKOK_REGION = {
   latitudeDelta: 0.0922,
   longitudeDelta: 0.0421,
 };
-// const API_KEY = 'AIzaSyC8oXnYPjm2GihFIjDsFt9iwDfCflvcRos';
 
 const database = firebase.database();
 const styles = StyleSheet.create({
