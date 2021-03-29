@@ -2,12 +2,17 @@
   <view class="container">
     <text class="text-color-primary">Home Page</text>
     <button title="Press me!" @press="exclaim" />
+    <button title="to ListChat" @press="toListChat" />
   </view>
 </template>
 
 <script>
-
 export default {
+  props: {
+    navigation: {
+      type: Object,
+    },
+  },
   data() {
     return {
       message: '',
@@ -21,6 +26,9 @@ export default {
       this.message += '!';
       // eslint-disable-next-line no-alert
       alert(this.message);
+    },
+    toListChat() {
+      this.navigation.navigate('ListChat');
     },
   },
 };

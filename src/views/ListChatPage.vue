@@ -1,54 +1,65 @@
 <template>
   <view class="container">
-    <text class="text-color-primary">List Chat Pageee</text>
-    <button title="Press me!" @press="test" />
-    <text class="text-color-primary">{{ testing }}</text>
+    <text class="header">Chats </text>
+    <view :style="{ height: 600 }">
+      <scroll-view
+        :content-container-style="{ contentContainer: { flex: 1, height: 10 } }"
+      >
+        <flat-list :data="rooms" :render-item="(room) => renderRooms(room)">
+        </flat-list>
+      </scroll-view>
+    </view>
   </view>
-  <!-- <div>
-    <v-container>
-      <Chat v-if="currentRoomID" :roomID="currentRoomID" :username="username" ref="chat" />
-    </v-container>
-    <v-container>
-      <v-navigation-drawer :width="400" absolute permanent right>
-        <div v-if="uid">
-          <v-card class="text-center" tile>
-            <v-list dense>
-              <v-card-title>Customers</v-card-title>
-              <v-list-item-group color="primary">
-                <v-list-item v-for="(room, i) in rooms" :key="i">
-                  <v-list-item-content>
-                    <v-list-item-title
-                      v-text="room.member"
-                      @click="setCurrentRoomID(room.id)"
-                    ></v-list-item-title>
-                  </v-list-item-content>
-                </v-list-item>
-              </v-list-item-group>
-            </v-list>
-          </v-card>
-        </div>
-      </v-navigation-drawer>
-    </v-container>
-  </div> -->
 </template>
 
 <script>
+import { Badge } from 'react-native-paper';
 import firebase from '../plugins/firebase';
+import React, { Component } from 'react';
+import { View, Dimensions, Text, TouchableOpacity } from 'react-native';
 
 export default {
+  name: 'ChatList',
+  components: { Badge },
+  props: {
+    navigation: {
+      type: Object,
+    },
+  },
   data() {
     return {
       rooms: [],
       otherMember: '',
       roomIDs: [],
-      uid: '',
       currentRoomID: '',
       username: '',
       testing: '',
       database: null,
+
+      username: 'pharmacy1',
+      uid: 'GVvPLsMTwoNdjt6r4J3F6NDvgwl1',
+      testing: '',
     };
   },
   methods: {
+    renderRooms(room) {
+      return (
+        <TouchableOpacity onPress={() => this.chat(room.item.id)}>
+          <View
+            style={{
+              flexDirection: 'row',
+              flex: 1,
+              borderRadius: 10,
+              padding: 10,
+              margin: 5,
+            }}
+          >
+            <Badge>{room.item.member[0]}</Badge>
+            <Text>{room.item.member}</Text>
+          </View>
+        </TouchableOpacity>
+      );
+    },
     setCurrentRoomID(id) {
       this.currentRoomID = id;
     },
@@ -87,8 +98,6 @@ export default {
     },
     async setAllRooms() {
       this.roomIDs = await this.getAllUsersChatRooms();
-      //   const newID = this.$route.params.roomID;
-      alert('got');
 
       const newID = null;
       if (newID) {
@@ -112,33 +121,13 @@ export default {
         .then((snapshot) => snapshot.val());
       this.username = username;
     },
-    async test() {
-      // alert(this.roomIDs);
-      // const username = await firebase.database()
-      //     .ref(`user/${this.uid}/credentials/username`)
-      //     .once('value')
-      //     .then((snapshot) => snapshot.val());
-      this.testing = this.roomIDs;
-      // alert(username);
+    chat(id) {
+      this.navigation.navigate('Chat', { id });
     },
   },
   async mounted() {
-    // this.uid = firebase.auth().currentUser.uid;
-
-    this.uid = 'eSfIbpVKbPZVGVVaYeGdZ3ZicsV2'; // need to be uid that has chatroom
     await this.setUsername();
-    // alert(this.username);
     await this.setAllRooms();
-    this.roomIDs.forEach((roomID) => {
-      firebase
-        .database()
-        .ref(`messages/chatRooms/${roomID}/messages`)
-        .on('value', () => {
-          // console.log(`theres an update in room: ${roomID}`, dataSnapshot.val());
-          this.$refs.chat.listAllMessages(); // need fixing
-        });
-    });
-    alert('mounted');
   },
 };
 </script>
@@ -150,7 +139,8 @@ export default {
   justify-content: center;
   flex: 1;
 }
-.text-color-primary {
-  color: blue;
+.header {
+  font-size: 35;
+  font-weight: bold;
 }
 </style>

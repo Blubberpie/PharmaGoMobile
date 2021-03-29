@@ -3,18 +3,15 @@
     <view class="header">
       <!-- <image :source="require('../../assets/user-male.png')" class="profile-pic"/> -->
       <!-- <ion-icon name="arrow-back-outline"></ion-icon> -->
-      <touchable-opacity :on-press="()=>back()">
+      <!-- <touchable-opacity :on-press="()=>test()">
             <view  class="button-view">
               <text class="color-white">back</text>
             </view>
-      </touchable-opacity> 
+      </touchable-opacity>  -->
       <!-- <Button icon='arrow-left' :on-press="()=>test()"> back</Button> -->
       <text class="username">
       {{ username }}
       <text>
-      <!-- <text class="text-color-primary">Chat Page</text> -->
-      <!-- <button title="Press me!" @press="test" />
-      <text class="text-color-primary">{{ testing }}</text> -->
     </view>
     <view :style='{height: 600}'>
     <scroll-view :content-container-style="{contentContainer: {flex:1, height:10}}">
@@ -33,8 +30,6 @@
               <text class="color-white">Send</text>
             </view>
       </touchable-opacity>  
-      <!-- <Button icon='camera' :on-press="()=>send()"></Button> -->
-      
     </view>
   </view>
 </template>
@@ -44,16 +39,20 @@ import { Button } from 'react-native-paper';
 import firebase from '../plugins/firebase';
 import React, { Component } from 'react';
 import {
-View, Dimensions, Text, KeyboardAvoidingView 
+View, Dimensions, Text 
 } from 'react-native';
 
 export default {
   name: 'Chat',
   components: { Button },
-  //   props: ['roomID', 'username'],
+  props: {
+    navigation: {
+      type: Object,
+    },
+  },
   data() {
     return {
-      roomID: '66516510',
+      roomID: '',
       username: "pharmacy1",
       name: null,
       showMessage: '',
@@ -64,7 +63,6 @@ export default {
   },
   methods: {
     renderMessage(message) {
-      // return (<Text> { message.item.text } </Text>)
       return(
         // <View  key={message.item.time}>
         <View>
@@ -137,75 +135,37 @@ export default {
         messages.push(val[key]);
       });
       this.messages = messages;
-      // this.messages = 
-      //   [
-      //     {text: 'a'},
-      //     {text: 'ab'},
-      //     {text: 'aaaaa'},
-      //     {text: 'aaaaaaaaa'},
-      //     {text: 'aaaaaaaaaaaaa'},
-      //     {text: 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'},
-      //     {text: 'a'},
-      //     {text: 'a'},
-      //     {text: 'a'},
-      //     {text: 'a'},
-      //     {text: 'a'},
-      //     {text: 'a'},
-      //     {text: 'a'},
-      //     {text: 'a'},
-      //     {text: 'a'},
-      //   ];
     },
     back() {
-      // alert(this.roomIDs);
-      // const username = await firebase.database()
-      //     .ref(`user/${this.uid}/credentials/username`)
-      //     .once('value')
-      //     .then((snapshot) => snapshot.val());
-      // alert('testing');
-      // this.$router.push({name: 'ListChat'});
-      // alert(username);
+      this.navigation.navigate('ListChat');
     },
+    test() {
+      
+    }
   },
-  // mounted() {
   async mounted() {
+    this.roomID = this.navigation.state.params.id;
     firebase
         .database()
         .ref(`messages/chatRooms/${this.roomID}/messages`)
         .on('value', () => {
-          // console.log(`theres an update in room: ${roomID}`, dataSnapshot.val());
           this.listAllMessages();
         });
     await this.listAllMessages();
     
+    
   },
   watch: {
-    // roomID() {
-    //   this.listAllMessages();
-    // },
   },
 };
 </script>
 
 <style scoped>
-.card-actions {
-  flex: 1;
-  position: absolute;
-  bottom: 10px;
-  width: 100%;
-}
-.logs {
-  height: 500px;
-  /* overflow: auto; */
-}
 .container {
   background-color: white;
   align-items: center;
   justify-content: center;
   flex: 1;
-}
-.text-color-primary {
-  color: blue;
 }
 .message-box {
   background-color: lightgray;
@@ -222,28 +182,12 @@ export default {
   font-size: 20;
   font-weight: bold;
 }
-.text-regular {
-  font-weight: bold;
-  color: white;
-}
 .header {
   flex-direction: row;
   height: 70;
   align-items: center;
   justify-content: flex-start;
   /* background-color: lightblue; */
-}
-.chat {
-  flex: 1;
-  position: relative;
-}
-.scroll {
-  flex: 0.6;
-}
-.profile-pic {
-  width: 60;
-  height: 60;
-  padding: 20;
 }
 .flex-1 {
   flex: 1;

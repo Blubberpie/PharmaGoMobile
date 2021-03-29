@@ -23,7 +23,7 @@ const StackNavigator = createStackNavigator(
     Home: HomePage,
   },
   {
-    initialRouteName: 'Chat',
+    initialRouteName: 'Home',
   }
 );
 
