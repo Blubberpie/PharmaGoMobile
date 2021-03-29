@@ -3,11 +3,12 @@
     <view class="header">
       <!-- <image :source="require('../../assets/user-male.png')" class="profile-pic"/> -->
       <!-- <ion-icon name="arrow-back-outline"></ion-icon> -->
-      <touchable-opacity :on-press="()=>test()" :disabled="(text == '')">
+      <touchable-opacity :on-press="()=>back()">
             <view  class="button-view">
               <text class="color-white">back</text>
             </view>
       </touchable-opacity> 
+      <!-- <Button icon='arrow-left' :on-press="()=>test()"> back</Button> -->
       <text class="username">
       {{ username }}
       <text>
@@ -19,25 +20,6 @@
     <scroll-view :content-container-style="{contentContainer: {flex:1, height:10}}">
       <flat-list :data='messages' :render-item="(message) => renderMessage(message)">
       </flat-list>
-      <!-- <view v-for="(item, index) in messages" :key="index">
-        <view v-if="item">
-          <view
-            :class="[
-              'd-flex flex-row align-center my-2',
-              item.from == username ? 'justify-end' : null,
-            ]"
-          >
-            <span v-if="item.from == username" class="blue--text mr-3">{{
-              item.text
-            }}</span>
-            <v-avatar :color="item.from == username ? 'indigo' : 'red'" size="36">
-            </v-avatar>
-            <span v-if="item.from != username" class="blue--text ml-3">{{
-              item.text
-            }}</span>
-          </view>
-        </view>
-      </view> -->
     </scroll-view>
     </view>
     <view class="message-view">
@@ -51,66 +33,23 @@
               <text class="color-white">Send</text>
             </view>
       </touchable-opacity>  
+      <!-- <Button icon='camera' :on-press="()=>send()"></Button> -->
       
     </view>
-    
-    
-    <!-- <div v-if="roomID">
-    <v-container fluid fill-height>
-      <v-layout>
-        <v-flex xs12 sm9>
-          <v-card justify="left" height="700px">
-            <v-toolbar dark color="primary darken-1">
-              <v-toolbar-title>Chat {{ username }}</v-toolbar-title>
-            </v-toolbar>
-            <v-card-text>
-              <v-list class="logs">
-                <div v-for="(item, index) in messages" :key="index">
-                  <div v-if="item">
-                    <div
-                      :class="[
-                        'd-flex flex-row align-center my-2',
-                        item.from == username ? 'justify-end' : null,
-                      ]"
-                    >
-                      <span v-if="item.from == username" class="blue--text mr-3">{{
-                        item.text
-                      }}</span>
-                      <v-avatar :color="item.from == username ? 'indigo' : 'red'" size="36">
-                      </v-avatar>
-                      <span v-if="item.from != username" class="blue--text ml-3">{{
-                        item.text
-                      }}</span>
-                    </div>
-                  </div>
-                </div>
-              </v-list>
-            </v-card-text>
-            <v-spacer></v-spacer>
-            <v-card-actions class="card-actions">
-              <v-text-field v-model="text" label="Message" single-line></v-text-field>
-              
-              <v-btn icon class="ml-4" @click="send"><v-icon>mdi-send</v-icon></v-btn>
-            </v-card-actions>
-          </v-card>
-        </v-flex>
-      </v-layout>
-    </v-container>
-  </div> -->
   </view>
 </template>
 
 <script>
-import { Ionicons } from "@expo/vector-icons";
+import { Button } from 'react-native-paper';
 import firebase from '../plugins/firebase';
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import {
 View, Dimensions, Text, KeyboardAvoidingView 
 } from 'react-native';
 
 export default {
   name: 'Chat',
-  components: {Ionicons},
+  components: { Button },
   //   props: ['roomID', 'username'],
   data() {
     return {
@@ -139,7 +78,9 @@ export default {
                 width: 26,
                 borderRadius:13,
                 backgroundColor: '#bbb',
-              }}>{ message.item.from[0] }</Text>
+              }}>
+              { message.item.from[0] }
+              </Text>
             </View>
           
             <View style={{
@@ -215,19 +156,28 @@ export default {
       //     {text: 'a'},
       //   ];
     },
-    test() {
+    back() {
       // alert(this.roomIDs);
       // const username = await firebase.database()
       //     .ref(`user/${this.uid}/credentials/username`)
       //     .once('value')
       //     .then((snapshot) => snapshot.val());
-      alert(testing);
+      // alert('testing');
+      // this.$router.push({name: 'ListChat'});
       // alert(username);
     },
   },
   // mounted() {
   async mounted() {
+    firebase
+        .database()
+        .ref(`messages/chatRooms/${this.roomID}/messages`)
+        .on('value', () => {
+          // console.log(`theres an update in room: ${roomID}`, dataSnapshot.val());
+          this.listAllMessages();
+        });
     await this.listAllMessages();
+    
   },
   watch: {
     // roomID() {
