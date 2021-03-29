@@ -35,6 +35,7 @@ export default {
     },
     toMapPage() {
       this.navigation.navigate('CustomerMap');
+    },
     toListChat() {
       this.navigation.navigate('ListChat');
     },
