@@ -12,7 +12,7 @@
       />
       <CardActions :style="styles.cardAction">
         <Button title="Show Details" @press="showDetails(key)"/>
-        <Button title="Accept"/>
+        <Button title="Accept" @press="approvePrescription(prescription.pharmacyId, key)"/>
         <Button title="Reject"/>
       </CardActions>
     </Card>
@@ -93,50 +93,52 @@ export default {
   },
   data() {
     return {
-      prescriptions: {
-        '-MW3sZcJlx4xb-liGNKS': {
-          medication: [{
-            frequency: '1',
-            name: '1',
-            quantity: '1',
-            strength: '1',
-          }],
-          patientId: 'eSfIbpVKbPZVGVVaYeGdZ3ZicsV2',
-          pharmacyId: {
-            pharmacyID: '-MVk4z6wEWaamUVbFAwV',
-          },
-          pharmacyName: 'pharmacy1',
-          prescriberEmail: 'asd@gasd.aaa',
-          prescriberName: 'asdsad',
-          prescriberPhone: '123123',
-          status: 1,
-        },
-        '-MKwiewifoi': {
-          medication: [
-            {
-              frequency: '123234',
-              name: '1243234',
-              quantity: '2343421',
-              strength: '3242341',
-            },
-            {
-              frequency: '123sadf234',
-              name: '12sdaf43234',
-              quantity: '23sf43421',
-              strength: '324f2341',
-            },
-          ],
-          patientId: 'eSfIbpVKbPZVGVVaYeGdZ3ZicsV2',
-          pharmacyId: {
-            pharmacyID: '-MVk4z6wEWaamUVbFAwV',
-          },
-          pharmacyName: 'pharmacy1',
-          prescriberEmail: 'asd@gasd.aaa',
-          prescriberName: 'asdsad',
-          prescriberPhone: '123123',
-          status: 1,
-        },
-      },
+      prescriptions: {},
+      customerPrescriptionsRef: null,
+      // prescriptions: {
+      //   '-MW3sZcJlx4xb-liGNKS': {
+      //     medication: [{
+      //       frequency: '1',
+      //       name: '1',
+      //       quantity: '1',
+      //       strength: '1',
+      //     }],
+      //     patientId: 'eSfIbpVKbPZVGVVaYeGdZ3ZicsV2',
+      //     pharmacyId: {
+      //       pharmacyID: '-MVk4z6wEWaamUVbFAwV',
+      //     },
+      //     pharmacyName: 'pharmacy1',
+      //     prescriberEmail: 'asd@gasd.aaa',
+      //     prescriberName: 'asdsad',
+      //     prescriberPhone: '123123',
+      //     status: 1,
+      //   },
+      //   '-MKwiewifoi': {
+      //     medication: [
+      //       {
+      //         frequency: '123234',
+      //         name: '1243234',
+      //         quantity: '2343421',
+      //         strength: '3242341',
+      //       },
+      //       {
+      //         frequency: '123sadf234',
+      //         name: '12sdaf43234',
+      //         quantity: '23sf43421',
+      //         strength: '324f2341',
+      //       },
+      //     ],
+      //     patientId: 'eSfIbpVKbPZVGVVaYeGdZ3ZicsV2',
+      //     pharmacyId: {
+      //       pharmacyID: '-MVk4z6wEWaamUVbFAwV',
+      //     },
+      //     pharmacyName: 'pharmacy1',
+      //     prescriberEmail: 'asd@gasd.aaa',
+      //     prescriberName: 'asdsad',
+      //     prescriberPhone: '123123',
+      //     status: 1,
+      //   },
+      // },
       styles,
       detailsVisible: false,
       selectedPrescription: [],
@@ -145,6 +147,15 @@ export default {
     };
   },
   created() {
+    this.customerPrescriptionsRef = database.ref('/prescriptions/eSfIbpVKbPZVGVVaYeGdZ3ZicsV2');
+    this.customerPrescriptionsRef.orderByChild('status').equalTo(STATUS_PENDING)
+      .on('value', (prescriptionsSnap) => {
+        const ps = {};
+        prescriptionsSnap.forEach((prescription) => {
+          ps[prescription.key] = prescription.val();
+        });
+        this.prescriptions = ps;
+      });
   },
   mounted() {
   },
@@ -158,6 +169,48 @@ export default {
     },
     setPage(number) {
       this.currentTablePage = number;
+    },
+    async approvePrescription(pharmacyId, prescriptionId) {
+      this.detailsVisible = false;
+      const pharmacyRef = database.ref(`/registered-pharmacies/${pharmacyId}`);
+      const deliveryJobsRef = database.ref('/deliveryJobs');
+
+      // let done = false;
+
+      await pharmacyRef.once('value', (pharmacySnap) => {
+        const pharmacyLocation = pharmacySnap.val().location;
+        const pharmacyAddress = pharmacySnap.val().address;
+        const customerAddress = 'Thung Phaya Thai, 10400, Bangkok, Ratchathewi, Thailand';
+        const customerLocation = {
+          lat: 13.7605358,
+          lng: 100.5267991,
+        };
+
+        if (pharmacyLocation && pharmacyAddress) {
+          const newDeliveryJob = {
+            pharmacyId,
+            customerId: 'eSfIbpVKbPZVGVVaYeGdZ3ZicsV2',
+            fromLocation: pharmacyLocation,
+            fromAddress: pharmacyAddress,
+            toLocation: customerLocation,
+            toAddress: customerAddress,
+            status: 1, // 1 = unassigned
+          };
+          deliveryJobsRef.push(newDeliveryJob)
+            .then(() => {
+              this.customerPrescriptionsRef.child(prescriptionId).update({
+                status: STATUS_APPROVED,
+              });
+              console.log('success');
+              // done = true;
+            })
+            .catch((error) => {
+              console.log(error);
+            });
+        } else {
+          console.log('Couldn\'t communicate with the server');
+        }
+      });
     },
   },
 };
