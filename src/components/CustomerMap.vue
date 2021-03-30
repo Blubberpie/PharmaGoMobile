@@ -125,7 +125,6 @@ export default {
   },
   async mounted() {
     await this.setPharmacies();
-    // console.log(this.pharmacies, 'before createmarker');
   },
   methods: {
     async setPharmacies() {
@@ -207,15 +206,13 @@ export default {
       // REQUIRED ANOTHER USER ID TO CREATE A CHAT ROOM pharmacyId
       const pharmacyId = await this.getPharmacyUserId(this.currentPharmacyId);
       let hasChild = await this.childExist(`user/${this.uid}`, 'chatRooms');
-      // console.log(hasChild);
       const roomID = await this.generateChatRoomID();
-      // this.roomID = roomID;
       if (!hasChild) {
         firebase
           .database()
           .ref(`user/${this.uid}`)
           .child('chatRooms')
-          .push(roomID); // add to
+          .push(roomID);
       } else {
         firebase.database().ref(`user/${this.uid}/chatRooms`).push(roomID);
       }
@@ -225,7 +222,7 @@ export default {
           .database()
           .ref(`user/${pharmacyId}`)
           .child('chatRooms')
-          .push(roomID); // add to
+          .push(roomID);
       } else {
         firebase.database().ref(`user/${pharmacyId}/chatRooms`).push(roomID);
       }
@@ -244,8 +241,7 @@ export default {
           text:
             'This message is send by the system. Start your conversation here!',
           timestamp: Date.now(),
-        }); // add messages
-      // this.$router.push({ name: 'chat', params: { roomID } });
+        });
       this.navigation.navigate('Chat', { id: roomID });
     },
   },

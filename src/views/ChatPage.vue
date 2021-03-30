@@ -67,7 +67,6 @@ export default {
   methods: {
     renderMessage(message) {
       return(
-        // <View  key={message.item.time}>
         <View>
           <View style={{flexDirection:message.item.from == this.username ? 'row-reverse':'row'}}>
             <View style={{flexDirection:message.item.from == this.username ? 'row-reverse':'row'}}>
@@ -90,7 +89,6 @@ export default {
               borderRadius:10,
               padding:10,
               margin:5,
-              // flex: 1,
             }}>
               <Text style={{fontSize:15,}}>{message.item.text}</Text>
             </View>
@@ -175,10 +173,8 @@ export default {
   padding: 10;
   border-radius: 10;
   width: 300;
-  /* flex: 1; */
 }
 .username {
-  /* text-align: center; */
   font-size: 20;
 }
 .text-bold {
@@ -190,7 +186,6 @@ export default {
   height: 70;
   align-items: center;
   justify-content: flex-start;
-  /* background-color: lightblue; */
 }
 .flex-1 {
   flex: 1;
@@ -199,7 +194,6 @@ export default {
   flex-direction: row;
   justify-content: space-evenly;
   align-items: center;
-  /* flex: 1; */
 }
 .button-view {
   padding: 10;
