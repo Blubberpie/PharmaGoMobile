@@ -36,11 +36,13 @@
 
 <script>
 import { Button } from 'react-native-paper';
-import firebase from '../plugins/firebase';
 import React, { Component } from 'react';
 import {
 View, Dimensions, Text 
 } from 'react-native';
+
+import firebase from 'firebase/app';
+import 'firebase/database';
 
 export default {
   name: 'Chat',
