@@ -21,7 +21,7 @@ import ListChatPage from './src/views/ListChatPage.vue';
 import HomePage from './src/views/HomePage.vue';
 import CustomerMap from './src/components/CustomerMap.vue';
 import PendingPrescriptions from './src/components/PendingPrescriptions.vue';
-
+import DriverMap from './src/components/DriverMap.vue'
 const StackNavigator = createStackNavigator(
   {
     Chat: ChatPage,
@@ -29,6 +29,7 @@ const StackNavigator = createStackNavigator(
     Home: HomePage,
     CustomerMap,
     PendingPrescriptions,
+    Driver: DriverMap,
   },
   {
     initialRouteName: 'Home',
