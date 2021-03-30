@@ -14,9 +14,11 @@
 
 <script>
 import { Badge } from 'react-native-paper';
-import firebase from '../plugins/firebase';
 import React, { Component } from 'react';
 import { View, Dimensions, Text, TouchableOpacity } from 'react-native';
+
+import firebase from 'firebase/app';
+import 'firebase/database';
 
 export default {
   name: 'ChatList',
