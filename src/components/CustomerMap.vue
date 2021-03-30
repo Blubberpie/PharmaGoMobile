@@ -31,7 +31,7 @@
       </view>
       <text />
       <view>
-        <button title="Chat" />
+        <button title="Chat" @press="createChatRoom" />
       </view>
     </view>
   </view>
@@ -97,6 +97,11 @@ export default {
     Marker,
     Callout,
   },
+  props: {
+    navigation: {
+      type: Object,
+    },
+  },
   data() {
     return {
       pharmacies: {},
@@ -110,6 +115,9 @@ export default {
       PROVIDER_GOOGLE,
       pressedMarker: false,
       styles,
+
+      username: 'sickperson',
+      uid: '4XulcO49PARP3PzjhZBkwOeMZYM2',
     };
   },
   created() {
@@ -157,6 +165,88 @@ export default {
     },
     cancelClick() {
       this.pressedMarker = false;
+    },
+    async getPharmacyUserId(key) {
+      console.log(key);
+      const id = await database
+        .ref(`registered-pharmacies/${key}/owner`)
+        .once('value')
+        .then((snapshot) => snapshot.val());
+      return id;
+    },
+    async generateChatRoomID() {
+      const getRandomInt = function (min, max) {
+        return Math.floor(Math.random() * (max - min + 1)) + min;
+      };
+      const generate = function () {
+        const length = 8;
+        const timestamp = +new Date();
+        const ts = timestamp.toString();
+        const parts = ts.split('').reverse();
+        let id = '';
+        for (let i = 0; i < length; i += 1) {
+          const index = getRandomInt(0, parts.length - 1);
+          id += parts[index];
+        }
+        return id;
+      };
+
+      const id = generate();
+      const hasDup = await this.childExist('messages/chatUID', id);
+      if (hasDup) {
+        return this.generateChatRoomID();
+      }
+      return id;
+    },
+    async childExist(path, child) {
+      const snapshot = await firebase.database().ref(path).once('value');
+      const hasChild = snapshot.hasChild(child);
+      return hasChild;
+    },
+    async createChatRoom() {
+      // REQUIRED ANOTHER USER ID TO CREATE A CHAT ROOM pharmacyId
+      const pharmacyId = await this.getPharmacyUserId(this.currentPharmacyId);
+      let hasChild = await this.childExist(`user/${this.uid}`, 'chatRooms');
+      // console.log(hasChild);
+      const roomID = await this.generateChatRoomID();
+      // this.roomID = roomID;
+      if (!hasChild) {
+        firebase
+          .database()
+          .ref(`user/${this.uid}`)
+          .child('chatRooms')
+          .push(roomID); // add to
+      } else {
+        firebase.database().ref(`user/${this.uid}/chatRooms`).push(roomID);
+      }
+      hasChild = await this.childExist(`user/${pharmacyId}`, 'chatRooms');
+      if (!hasChild) {
+        firebase
+          .database()
+          .ref(`user/${pharmacyId}`)
+          .child('chatRooms')
+          .push(roomID); // add to
+      } else {
+        firebase.database().ref(`user/${pharmacyId}/chatRooms`).push(roomID);
+      }
+      firebase
+        .database()
+        .ref('messages/chatRooms/')
+        .child(roomID)
+        .child('members')
+        .update({ member1: this.username, member2: this.currentPharmacyName });
+      firebase
+        .database()
+        .ref(`messages/chatRooms/${roomID}`)
+        .child('messages')
+        .push({
+          from: this.username,
+          text:
+            'This message is send by the system. Start your conversation here!',
+          timestamp: Date.now(),
+        }); // add messages
+      // this.$router.push({ name: 'chat', params: { roomID } });
+      this.navigation.navigate('Chat', { id: roomID });
     },
   },
 };

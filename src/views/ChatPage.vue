@@ -10,7 +10,7 @@
       </touchable-opacity>  -->
       <!-- <Button icon='arrow-left' :on-press="()=>test()"> back</Button> -->
       <text class="username">
-      {{ username }}
+      {{ from }}
       <text>
     </view>
     <view :style='{height: 600}'>
@@ -55,6 +55,7 @@ export default {
   data() {
     return {
       roomID: '',
+      from: 'sickperson1',
       username: "pharmacy1",
       name: null,
       showMessage: '',
