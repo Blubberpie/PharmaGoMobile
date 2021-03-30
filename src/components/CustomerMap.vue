@@ -1,14 +1,16 @@
 <template>
   <view :style="styles.container">
-    <MapView :style="styles.map"
+    <MapView
+      :style="styles.map"
       :initialRegion="initialRegion"
       :provider="PROVIDER_GOOGLE"
     >
       <Marker
-        v-for="marker in markers" :key="marker.id"
+        v-for="marker in markers"
+        :key="marker.id"
         :coordinate="marker.location"
       >
-        <Callout :onPress="()=>handleMarkerClick(marker)">
+        <Callout :onPress="() => handleMarkerClick(marker)">
           <view>
             <text :style="styles.markerTitle">{{ marker.name }}</text>
             <text>Click to show details</text>
@@ -20,14 +22,16 @@
     <!-- Drawer -->
     <view :style="styles.drawer" v-if="pressedMarker">
       <text :style="styles.lightTitle">{{ currentPharmacyName }}</text>
-      <text :style="styles.lightTextSmall">Address: {{ currentPharmacyAddress }}</text>
-      <text/>
+      <text :style="styles.lightTextSmall"
+        >Address: {{ currentPharmacyAddress }}</text
+      >
+      <text />
       <view :style="styles.textContainer">
         <text :style="styles.lightText">{{ currentPharmacyDescription }}</text>
       </view>
-      <text/>
+      <text />
       <view>
-        <button title="Chat"/>
+        <button title="Chat" />
       </view>
     </view>
   </view>
@@ -113,7 +117,7 @@ export default {
   },
   async mounted() {
     await this.setPharmacies();
-    this.createMarkers();
+    // console.log(this.pharmacies, 'before createmarker');
   },
   methods: {
     async setPharmacies() {
@@ -123,6 +127,7 @@ export default {
           pharms[pharmacy.key] = pharmacy.val();
         });
         this.pharmacies = pharms;
+        this.createMarkers();
       });
     },
     createMarkers() {
@@ -133,15 +138,13 @@ export default {
             latitude: pharmacy.location.lat,
             longitude: pharmacy.location.lng,
           };
-          this.markers.push(
-            {
-              id: key,
-              name: pharmacy.name,
-              description: pharmacy.description,
-              address: pharmacy.address,
-              location: newMarker,
-            },
-          );
+          this.markers.push({
+            id: key,
+            name: pharmacy.name,
+            description: pharmacy.description,
+            address: pharmacy.address,
+            location: newMarker,
+          });
         });
       }
     },
