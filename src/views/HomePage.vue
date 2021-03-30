@@ -4,12 +4,17 @@
     <button title="Press me!" @press="exclaim" />
     <button title="Map Page" @press="toMapPage" />
     <button title="Pending Prescriptions" @press="toPendingPrescriptions" />
+    <button title="to ListChat" @press="toListChat" />
   </view>
 </template>
 
 <script>
-
 export default {
+  props: {
+    navigation: {
+      type: Object,
+    },
+  },
   data() {
     return {
       message: '',
@@ -34,6 +39,9 @@ export default {
     },
     toPendingPrescriptions() {
       this.navigation.navigate('PendingPrescriptions');
+    },
+    toListChat() {
+      this.navigation.navigate('ListChat');
     },
   },
 };

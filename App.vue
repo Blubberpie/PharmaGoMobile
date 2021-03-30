@@ -12,10 +12,7 @@
 import './src/plugins/firebase';
 // declare module 'vue-native-router';
 import { Provider } from 'react-native-paper';
-import {
-  createAppContainer,
-  createStackNavigator,
-} from 'vue-native-router';
+import { createAppContainer, createStackNavigator } from 'vue-native-router';
 
 // const VueNativeRouter = require('vue-native-router');
 
