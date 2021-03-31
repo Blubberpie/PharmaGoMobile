@@ -575,18 +575,9 @@ export default {
   background-color: rgb(255, 255, 255);
   position: absolute;
   border-radius: 10;
-  height: 250;
-  width: 100%;
-  padding: 24;
-  bottom: 0;
-}
-/* .card{
-  background-color: rgb(255, 255, 255);
-  position: absolute;
-  border-radius: 10;
   height: 160;
   width: 100%;
   padding: 20;
   bottom: 0;
-} */
+}
 </style>
