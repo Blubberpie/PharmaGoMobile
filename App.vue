@@ -18,8 +18,7 @@ import HomePage from './src/views/HomePage.vue';
 import CustomerMap from './src/components/CustomerMap.vue';
 import PendingPrescriptions from './src/components/PendingPrescriptions.vue';
 import DriverMap from './src/components/DriverMap.vue';
-import Register from './src/Register';
-import DriverJob from './src/DriverJob';
+// import Register from './src/Register';
 // import Login from './src/views/Login.vue';
 
 const StackNavigator = createStackNavigator(
@@ -30,8 +29,7 @@ const StackNavigator = createStackNavigator(
     CustomerMap,
     PendingPrescriptions,
     Driver: DriverMap,
-    DriverJob,
-    Register,
+    // Register,
     // Login,
   },
   {

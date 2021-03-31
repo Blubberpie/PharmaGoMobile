@@ -1,29 +1,68 @@
 <template>
   <view class="container">
-    <!-- <status-bar background-color="blue" bar-style="light-content" /><view> -->
-    <text class="header">Home</text>
-    <button title="Press me!" @press="exclaim" />
-    <button title="Map Page" @press="toMapPage" />
-    <button title="Pending Prescriptions" @press="toPendingPrescriptions" />
-    <button title="to ListChat" @press="toListChat" />
-    <button title="Drvier Job Page" @press="toDriverPage" />
-    <button title="Drvier Map Page" @press="toDriverMapPage" />
-    <button title="Login Page" @press="toLoginPage" />
+    <text class="header">PharmaGo </text>
+    <view v-if="role === 'Customer'">
+      <view class="row" style="background-color: #0099ff">
+        <!-- <button title="Map Page " @press="toMapPage" /> -->
+        <touchable-opacity :on-press="() => toMapPage()">
+          <view>
+            <text class="text">Choose Pharmacy</text>
+          </view>
+        </touchable-opacity>
+      </view>
+      <view class="row" style="background-color: #0066ff">
+        <!-- <button title="to ListChat " @press="toListChat" /> -->
+        <touchable-opacity :on-press="() => toListChat()">
+          <view>
+            <text class="text">Chats </text>
+          </view>
+        </touchable-opacity>
+      </view>
+      <view class="row" style="background-color: #0052cc">
+        <!-- <button
+          title="Pending Prescriptions "
+          @press="toPendingPrescriptions"
+        /> -->
+        <touchable-opacity :on-press="() => toPendingPrescriptions()">
+          <view>
+            <text class="text">Pending Prescriptions </text>
+          </view>
+        </touchable-opacity>
+      </view>
+      <view class="row" style="background-color: #000099">
+        <!-- <button title="Log out " @press="logout" /> -->
+        <touchable-opacity :on-press="() => logout()">
+          <view>
+            <text class="text">Sign Out </text>
+          </view>
+        </touchable-opacity>
+      </view>
+    </view>
+    <view v-else>
+      <!-- <button title="Driver Map Page" @press="toDriverMapPage" /> -->
+      <view class="row" style="background-color: #0099ff">
+        <touchable-opacity :on-press="() => toDriverMapPage()">
+          <view>
+            <text class="text">Job Map </text>
+          </view>
+        </touchable-opacity>
+      </view>
+    </view>
   </view>
 </template>
 
 <script>
-import { Appbar } from 'react-native-paper';
-import React from 'react';
+// import { Appbar } from 'react-native-paper';
+// import React, { Component } from 'react';
 import { View, Dimensions, Text, TouchableOpacity, Header } from 'react-native';
 
-import firebase from 'firebase/app';
-import 'firebase/database';
+// import firebase from 'firebase/app';
+// import 'firebase/database';
 
-const database = firebase.database();
+// const database = firebase.database();
 
 export default {
-  components: { Appbar },
+  // components: { Header },
   props: {
     navigation: {
       type: Object,
@@ -35,7 +74,7 @@ export default {
 
       username: 'mock username',
       uid: '',
-      role: '',
+      role: 'Customer',
     };
   },
   mounted() {
@@ -43,11 +82,6 @@ export default {
     // let user = firebase.auth().currentUser;
   },
   methods: {
-    exclaim() {
-      this.message += '!';
-      // eslint-disable-next-line no-alert
-      alert(this.message);
-    },
     toMapPage() {
       this.navigation.navigate('CustomerMap');
     },
@@ -57,14 +91,14 @@ export default {
     toListChat() {
       this.navigation.navigate('ListChat');
     },
-    toDriverPage() {
-      this.navigation.navigate('DriverJob');
-    },
     toDriverMapPage() {
       this.navigation.navigate('Driver');
     },
     toLoginPage() {
       this.navigation.navigate('Login');
+    },
+    logout() {
+      alert('logout');
     },
   },
 };
@@ -81,10 +115,27 @@ export default {
   color: blue;
 }
 .header {
-  padding: 60px;
+  padding: 40px;
   text-align: center;
-  background-color: lightblue;
-  color: white;
+  /* background-color: #1976d2; */
+  background-color: white;
+  color: #1976d2;
   font-size: 30px;
+}
+.row {
+  flex-direction: row;
+  /* align-items: center; */
+  justify-content: space-evenly;
+  /* justify-content: center; */
+  /* border-radius: 40; */
+  padding: 50;
+}
+.text {
+  font-size: 25;
+  color: white;
+}
+.button {
+  /* border: 50; */
+  flex: 1;
 }
 </style>
