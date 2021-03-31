@@ -41,8 +41,8 @@ export default {
     toPendingPrescriptions() {
       this.navigation.navigate('PendingPrescriptions');
     },
-    toListChat() {
-      this.navigation.navigate('ListChat');
+    toDriverPage() {
+      this.navigation.navigate('Driver');
     },
   },
 };
