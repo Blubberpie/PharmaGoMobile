@@ -1,5 +1,5 @@
 <template>
-  <View>
+  <ScrollView>
     <Title>Manage Your Pending Prescriptions</Title>
     <Card
       v-for="(prescription, key) in prescriptions"
@@ -46,14 +46,20 @@
         </DialogContent>
       </Dialog>
     </Portal>
-  </View>
+  </ScrollView>
 </template>
 
 <script>
 import firebase from 'firebase/app';
 import 'firebase/database';
-import { StyleSheet } from 'react-native';
-import { Card, Portal, Dialog, Title, DataTable } from 'react-native-paper';
+import { StyleSheet, ScrollView } from 'react-native';
+import {
+  Card,
+  Portal,
+  Dialog,
+  Title,
+  DataTable,
+} from 'react-native-paper';
 
 const database = firebase.database();
 const styles = StyleSheet.create({
@@ -84,55 +90,12 @@ export default {
     DTRow: DataTable.Row,
     DTCell: DataTable.Cell,
     DTPagination: DataTable.Pagination,
+    ScrollView,
   },
   data() {
     return {
       prescriptions: {},
       customerPrescriptionsRef: null,
-      // prescriptions: {
-      //   '-MW3sZcJlx4xb-liGNKS': {
-      //     medication: [{
-      //       frequency: '1',
-      //       name: '1',
-      //       quantity: '1',
-      //       strength: '1',
-      //     }],
-      //     patientId: 'eSfIbpVKbPZVGVVaYeGdZ3ZicsV2',
-      //     pharmacyId: {
-      //       pharmacyID: '-MVk4z6wEWaamUVbFAwV',
-      //     },
-      //     pharmacyName: 'pharmacy1',
-      //     prescriberEmail: 'asd@gasd.aaa',
-      //     prescriberName: 'asdsad',
-      //     prescriberPhone: '123123',
-      //     status: 1,
-      //   },
-      //   '-MKwiewifoi': {
-      //     medication: [
-      //       {
-      //         frequency: '123234',
-      //         name: '1243234',
-      //         quantity: '2343421',
-      //         strength: '3242341',
-      //       },
-      //       {
-      //         frequency: '123sadf234',
-      //         name: '12sdaf43234',
-      //         quantity: '23sf43421',
-      //         strength: '324f2341',
-      //       },
-      //     ],
-      //     patientId: 'eSfIbpVKbPZVGVVaYeGdZ3ZicsV2',
-      //     pharmacyId: {
-      //       pharmacyID: '-MVk4z6wEWaamUVbFAwV',
-      //     },
-      //     pharmacyName: 'pharmacy1',
-      //     prescriberEmail: 'asd@gasd.aaa',
-      //     prescriberName: 'asdsad',
-      //     prescriberPhone: '123123',
-      //     status: 1,
-      //   },
-      // },
       styles,
       detailsVisible: false,
       selectedPrescription: [],
@@ -179,8 +142,7 @@ export default {
       await pharmacyRef.once('value', (pharmacySnap) => {
         const pharmacyLocation = pharmacySnap.val().location;
         const pharmacyAddress = pharmacySnap.val().address;
-        const customerAddress =
-          'Thung Phaya Thai, 10400, Bangkok, Ratchathewi, Thailand';
+        const customerAddress = 'Thung Phaya Thai, 10400, Bangkok, Ratchathewi, Thailand';
         const customerLocation = {
           lat: 13.7605358,
           lng: 100.5267991,

@@ -19,6 +19,7 @@ import CustomerMap from './src/components/CustomerMap.vue';
 import PendingPrescriptions from './src/components/PendingPrescriptions.vue';
 import DriverMap from './src/components/DriverMap.vue';
 import Login from './src/views/Login.vue';
+import Statuses from './src/views/DeliveryStatuses.vue';
 
 const StackNavigator = createStackNavigator(
   {
@@ -29,10 +30,11 @@ const StackNavigator = createStackNavigator(
     PendingPrescriptions,
     Driver: DriverMap,
     Login,
+    Statuses,
   },
   {
     initialRouteName: 'Login',
-  }
+  },
 );
 
 const AppNavigator = createAppContainer(StackNavigator);

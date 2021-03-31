@@ -1,5 +1,5 @@
 <template>
-  <view class="container">
+  <ScrollView class="container">
     <text class="header">PharmaGo </text>
     <view v-if="role === 'Customer'">
       <view class="row" style="background-color: #0099ff">
@@ -26,6 +26,17 @@
         <touchable-opacity :on-press="() => toPendingPrescriptions()">
           <view>
             <text class="text">Pending Prescriptions </text>
+          </view>
+        </touchable-opacity>
+      </view>
+      <view class="row" style="background-color: #0033aa">
+        <!-- <button
+          title="Pending Prescriptions "
+          @press="toPendingPrescriptions"
+        /> -->
+        <touchable-opacity :on-press="() => toDeliveryStatus()">
+          <view>
+            <text class="text">Check Delivery Status</text>
           </view>
         </touchable-opacity>
       </view>
@@ -59,13 +70,13 @@
 
     <button title="Login" @press="login" />
     <button title="test" @press="test" />
-  </view>
+  </ScrollView>
 </template>
 
 <script>
 // import { Appbar } from 'react-native-paper';
 // import React, { Component } from 'react';
-import { View, Dimensions, Text, TouchableOpacity, Header } from 'react-native';
+import { ScrollView } from 'react-native';
 
 import firebase from 'firebase/app';
 import 'firebase/database';
@@ -73,7 +84,7 @@ import 'firebase/database';
 const database = firebase.database();
 
 export default {
-  // components: { Header },
+  components: { ScrollView },
   props: {
     navigation: {
       type: Object,
@@ -135,6 +146,9 @@ export default {
     },
     test() {
       console.log(this.role);
+    },
+    toDeliveryStatus() {
+      this.navigation.navigate('Statuses');
     },
   },
 };

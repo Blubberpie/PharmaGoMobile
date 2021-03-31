@@ -12,6 +12,7 @@ import App from './index.vue';
 
 // registering all native-base components to the global scope of the Vue
 Vue.use(VueNativeBase);
+
 export default {
   components: { App },
 };

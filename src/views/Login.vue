@@ -84,7 +84,7 @@ export default {
             },
             (err) => {
               this.errorMessage = err.message;
-            }
+            },
           );
       } else {
         this.errorMessage = 'Cannot be empty!';
