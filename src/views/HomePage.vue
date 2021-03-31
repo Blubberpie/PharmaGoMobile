@@ -58,13 +58,10 @@
     </view>
 
     <button title="Login" @press="login" />
-    <button title="test" @press="test" />
   </view>
 </template>
 
 <script>
-// import { Appbar } from 'react-native-paper';
-// import React, { Component } from 'react';
 import { View, Dimensions, Text, TouchableOpacity, Header } from 'react-native';
 
 import firebase from 'firebase/app';
@@ -133,18 +130,12 @@ export default {
           this.role = snapshot.val();
         });
     },
-    test() {
-      console.log(this.role);
-    },
   },
 };
 </script>
 
 <style>
 .container {
-  /* background-color: white;
-  align-items: center;
-  justify-content: center; */
   flex: 1;
 }
 .text-color-primary {
@@ -153,17 +144,13 @@ export default {
 .header {
   padding: 40px;
   text-align: center;
-  /* background-color: #1976d2; */
   background-color: white;
   color: #1976d2;
   font-size: 30px;
 }
 .row {
   flex-direction: row;
-  /* align-items: center; */
   justify-content: space-evenly;
-  /* justify-content: center; */
-  /* border-radius: 40; */
   padding: 50;
 }
 .text {
@@ -171,7 +158,6 @@ export default {
   color: white;
 }
 .button {
-  /* border: 50; */
   flex: 1;
 }
 </style>
