@@ -124,7 +124,7 @@
           }"
         />
             <text :style="{color:'grey',fontWeight:'bold',fontSize:15}">Press drop off when process finished</text>
-          <touchable-opacity :on-press="() => dropoff(index, 3)" :style="{backgroundColor:'#008000',alignItems:'center',padding:10,borderRadius:20}">
+          <touchable-opacity :on-press="() => dropoff(index, 4)" :style="{backgroundColor:'#008000',alignItems:'center',padding:10,borderRadius:20}">
             <text :style="{color:'white',fontWeight:'bold'}">DROP OFF</text>
           </touchable-opacity>
         </view>
@@ -435,8 +435,12 @@ export default {
       this.deliveryJobRef.transaction((snapshot) => {
         Object.entries(snapshot).forEach((key) => {
           if (key[0] === Object.keys(this.deliveryJob)[index]) {
-            if (stage == 4) {
-              console.log(his.deliveryJobRef.child(key[0]));
+            if (stage == 4 && key[0] !== undefined) {
+              // console.log(key[0]);
+              // console.log(Object.keys(this.deliveryJob)[index]);
+              // console.log( database.ref(`deliveryJobs/${key[0]}/status/`));
+              database.ref(`deliveryJobs/dummy/a`).remove();
+              // console.log(this.deliveryJobRef.child(key[0]));
             }
             else {
             this.deliveryJobRef.child(key[0]).update({
@@ -449,13 +453,10 @@ export default {
     },
       makeMarkers() {
         if (this.deliveryJob) {
-          // console.log('hi');
             Object.entries(this.deliveryJob).forEach((key) => {
               const [id, job] = key;
+              if (job.status !== 4) {
               const pharmacy_ = this.getName(job.pharmacyId);
-              //  console.log(job); 
-              //  console.log(job.pharmacyId); 
-              // console.log(pharmacy);
               this.new_markers.push({
                   destination:{
                       latitude:job.toLocation.lat,
@@ -469,16 +470,13 @@ export default {
                   pharmacyAddress:job.fromAddress,
                   customerAddress:job.toAddress
               });
+              }
             });
         }
       },
       getName(p) {
         let data = "";
-        console.log('out');
-        // console.log(this.pharmacy);
         Object.entries(this.pharmacies).forEach((key) => {
-          console.log('in');
-          // console.log(key[0]);
           if (key[0] === p) {
             data = key[1].name;
           }
@@ -597,15 +595,6 @@ export default {
   bottom: 0;
   margin-bottom: 150;
 }
-/* .card{
-  background-color: rgb(255, 255, 255);
-  position: absolute;
-  border-radius: 10;
-  height: 250;
-  width: 100%;
-  padding: 24;
-  bottom: 0; */
-/* } */
 .card{
   background-color: rgb(255, 255, 255);
   position: absolute;
