@@ -1,8 +1,4 @@
 <template>
-  <!-- <view class="container">
-    <text class="text-color-primary">My Vue Native App</text>=
-    <button title="Press me!" @press="exclaim" />
-  </view> -->
   <Provider>
     <app-navigator/>
   </Provider>
@@ -22,6 +18,9 @@ import HomePage from './src/views/HomePage.vue';
 import CustomerMap from './src/components/CustomerMap.vue';
 import PendingPrescriptions from './src/components/PendingPrescriptions.vue';
 import DriverMap from './src/components/DriverMap.vue'
+import Register from './src/Register'
+import Driver from './src/DriverJob';
+
 const StackNavigator = createStackNavigator(
   {
     Chat: ChatPage,
@@ -30,6 +29,8 @@ const StackNavigator = createStackNavigator(
     CustomerMap,
     PendingPrescriptions,
     Driver: DriverMap,
+    DriverJob,
+    Register,
   },
   {
     initialRouteName: 'Home',
