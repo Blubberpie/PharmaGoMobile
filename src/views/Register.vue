@@ -85,8 +85,7 @@ export default {
                 }
                 firebase.auth().createUserWithEmailAndPassword(this.email, this.password).then(
                     (cred) => {
-                    const { user } = cred;
-                    database.ref(`/user`).push({
+                    database.ref(`/user/${cred.user.uid}`).set({
                         credentials: {
                         username: this.username,
                         role: this.role,
