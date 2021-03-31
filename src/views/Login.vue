@@ -20,6 +20,7 @@
       :onChangeText="(text) => setPassword(text)"
     />
     <PButton mode="contained" :onPress="login"> Login </PButton>
+    <PButton mode="contained" :onPress="register"> Register </PButton>
   </View>
 </template>
 
@@ -95,6 +96,9 @@ export default {
     },
     setPassword(password) {
       this.password = password;
+    },
+    register() {
+      this.navigation.navigate('Register');
     },
   },
 };

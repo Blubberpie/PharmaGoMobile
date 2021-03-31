@@ -30,7 +30,7 @@ const StackNavigator = createStackNavigator(
     PendingPrescriptions,
     Driver: DriverMap,
     Login,
-    Register : RegisterPage,
+    Register: RegisterPage,
   },
   {
     initialRouteName: 'Login',
