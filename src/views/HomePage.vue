@@ -48,6 +48,8 @@
         </touchable-opacity>
       </view>
     </view>
+
+    <button title="Login" @press="login" />
   </view>
 </template>
 
@@ -94,7 +96,7 @@ export default {
     toDriverMapPage() {
       this.navigation.navigate('Driver');
     },
-    toLoginPage() {
+    login() {
       this.navigation.navigate('Login');
     },
     logout() {
