@@ -7,13 +7,14 @@
       :style="styles.card"
       :elevation="5"
     >
-      <CardTitle
-        :title="prescription.pharmacyName"
-      />
+      <CardTitle :title="prescription.pharmacyName" />
       <CardActions :style="styles.cardAction">
-        <Button title="Show Details" @press="showDetails(key)"/>
-        <Button title="Accept" @press="approvePrescription(prescription.pharmacyId, key)"/>
-        <Button title="Reject"/>
+        <Button title="Show Details" @press="showDetails(key)" />
+        <Button
+          title="Accept"
+          @press="approvePrescription(prescription.pharmacyId, key)"
+        />
+        <Button title="Reject" />
       </CardActions>
     </Card>
     <Portal>
@@ -27,10 +28,7 @@
               <DTTitle>Frequency</DTTitle>
               <DTTitle numeric>Quantity</DTTitle>
             </DTHeader>
-            <DTRow
-              v-for="(medication, key) in selectedPrescription"
-              :key="key"
-            >
+            <DTRow v-for="(medication, key) in selectedPrescription" :key="key">
               <DTCell>{{ medication.name }}</DTCell>
               <DTCell>{{ medication.strength }}</DTCell>
               <DTCell>{{ medication.frequency }}</DTCell>
@@ -39,7 +37,9 @@
             <!-- Doesnt work for now -->
             <DTPagination
               :page="currentTablePage"
-              :numberOfPages="Math.ceil(selectedPrescription.length / itemsPerPage)"
+              :numberOfPages="
+                Math.ceil(selectedPrescription.length / itemsPerPage)
+              "
               :onPageChange="(page) => setPage(page)"
             />
           </DTable>
@@ -53,13 +53,7 @@
 import firebase from 'firebase/app';
 import 'firebase/database';
 import { StyleSheet } from 'react-native';
-import {
-  Card,
-  Portal,
-  Dialog,
-  Title,
-  DataTable,
-} from 'react-native-paper';
+import { Card, Portal, Dialog, Title, DataTable } from 'react-native-paper';
 
 const database = firebase.database();
 const styles = StyleSheet.create({
@@ -144,11 +138,15 @@ export default {
       selectedPrescription: [],
       currentTablePage: 0,
       itemsPerPage: 4,
+      uid: '',
     };
   },
   created() {
-    this.customerPrescriptionsRef = database.ref('/prescriptions/eSfIbpVKbPZVGVVaYeGdZ3ZicsV2');
-    this.customerPrescriptionsRef.orderByChild('status').equalTo(STATUS_PENDING)
+    this.uid = firebase.auth().currentUser.uid;
+    this.customerPrescriptionsRef = database.ref(`/prescriptions/${this.uid}`);
+    this.customerPrescriptionsRef
+      .orderByChild('status')
+      .equalTo(STATUS_PENDING)
       .on('value', (prescriptionsSnap) => {
         const ps = {};
         prescriptionsSnap.forEach((prescription) => {
@@ -158,6 +156,7 @@ export default {
       });
   },
   mounted() {
+    this.uid = firebase.auth().currentUser.uid;
   },
   methods: {
     showDetails(key) {
@@ -180,7 +179,8 @@ export default {
       await pharmacyRef.once('value', (pharmacySnap) => {
         const pharmacyLocation = pharmacySnap.val().location;
         const pharmacyAddress = pharmacySnap.val().address;
-        const customerAddress = 'Thung Phaya Thai, 10400, Bangkok, Ratchathewi, Thailand';
+        const customerAddress =
+          'Thung Phaya Thai, 10400, Bangkok, Ratchathewi, Thailand';
         const customerLocation = {
           lat: 13.7605358,
           lng: 100.5267991,
@@ -189,14 +189,15 @@ export default {
         if (pharmacyLocation && pharmacyAddress) {
           const newDeliveryJob = {
             pharmacyId,
-            customerId: 'eSfIbpVKbPZVGVVaYeGdZ3ZicsV2',
+            customerId: this.uid,
             fromLocation: pharmacyLocation,
             fromAddress: pharmacyAddress,
             toLocation: customerLocation,
             toAddress: customerAddress,
             status: 1, // 1 = unassigned
           };
-          deliveryJobsRef.push(newDeliveryJob)
+          deliveryJobsRef
+            .push(newDeliveryJob)
             .then(() => {
               this.customerPrescriptionsRef.child(prescriptionId).update({
                 status: STATUS_APPROVED,
@@ -208,7 +209,7 @@ export default {
               console.log(error);
             });
         } else {
-          console.log('Couldn\'t communicate with the server');
+          console.log("Couldn't communicate with the server");
         }
       });
     },

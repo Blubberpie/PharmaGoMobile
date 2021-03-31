@@ -58,10 +58,10 @@
 // import React, { Component } from 'react';
 import { View, Dimensions, Text, TouchableOpacity, Header } from 'react-native';
 
-// import firebase from 'firebase/app';
-// import 'firebase/database';
+import firebase from 'firebase/app';
+import 'firebase/database';
 
-// const database = firebase.database();
+const database = firebase.database();
 
 export default {
   // components: { Header },
@@ -73,7 +73,6 @@ export default {
   data() {
     return {
       message: '',
-
       username: 'mock username',
       uid: '',
       role: 'Customer',
@@ -81,7 +80,7 @@ export default {
   },
   mounted() {
     this.message = 'Hello World'; // testing mounted
-    // let user = firebase.auth().currentUser;
+    this.uid = firebase.auth().currentUser.uid;
   },
   methods: {
     toMapPage() {
@@ -100,8 +99,22 @@ export default {
       this.navigation.navigate('Login');
     },
     logout() {
-      alert('logout');
+      firebase
+        .auth()
+        .signOut()
+        .then(() => {
+          this.navigation.navigate('Login');
+          alert('You have been logged off');
+          // Sign-out successful.
+        })
+        .catch((error) => {
+          console.log(error);
+          alert('An error has occured');
+        });
     },
+    // test() {
+    //   console.log(this.uid);
+    // },
   },
 };
 </script>

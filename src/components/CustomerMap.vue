@@ -115,17 +115,27 @@ export default {
       pressedMarker: false,
       styles,
 
-      username: 'sickperson',
-      uid: '4XulcO49PARP3PzjhZBkwOeMZYM2',
+      username: '',
+      uid: '',
     };
   },
   created() {
     this.pharmaciesRef = database.ref('/registered-pharmacies');
   },
   async mounted() {
+    this.uid = firebase.auth().currentUser.uid;
+    await this.setUsername();
     await this.setPharmacies();
   },
   methods: {
+    async setUsername() {
+      const username = await firebase
+        .database()
+        .ref(`user/${this.uid}/credentials/username`)
+        .once('value')
+        .then((snapshot) => snapshot.val());
+      this.username = username;
+    },
     async setPharmacies() {
       await this.pharmaciesRef.on('value', (pharmaciesSnap) => {
         const pharms = {};
