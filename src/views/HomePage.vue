@@ -5,7 +5,9 @@
     <button title="Map Page" @press="toMapPage" />
     <button title="Pending Prescriptions" @press="toPendingPrescriptions" />
     <button title="to ListChat" @press="toListChat" />
-    <button title="Drvier Page" @press="toDriverPage" />
+    <button title="Drvier Job Page" @press="toDriverPage" />
+    <button title="Drvier Map Page" @press="toDriverMapPage" />
+    <button title="Login Page" @press="toLoginPage" />
   </view>
 </template>
 
@@ -41,8 +43,17 @@ export default {
     toPendingPrescriptions() {
       this.navigation.navigate('PendingPrescriptions');
     },
+    toListChat() {
+      this.navigation.navigate('ListChat');
+    },
     toDriverPage() {
+      this.navigation.navigate('DriverJob');
+    },
+    toDriverMapPage() {
       this.navigation.navigate('Driver');
+    },
+    toLoginPage() {
+      this.navigation.navigate('Login');
     },
   },
 };
