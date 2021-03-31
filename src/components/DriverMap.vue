@@ -68,7 +68,7 @@
                 />
             </view>
             <view :style="{flexDirection:'row',justifyContent:'flex-end'}">
-            <touchable-opacity :on-press="ignore" :style="{paddingTop:10}">
+            <touchable-opacity :on-press="() => ignore(1)" :style="{paddingTop:10}">
             <text :style="{color:'grey',fontWeight:'bold'}">Ignore</text>
           </touchable-opacity>
           <touchable-opacity :on-press="() => accept(index, 2)" :style="{marginLeft:30,marginRight:15,backgroundColor:'green',padding:10,borderRadius:20,width:100}">
@@ -364,7 +364,7 @@ export default {
       isClicked: false,
       deliveryJob: {},
       deliveryJobRef: null,
-      pharmacy: {},
+      pharmacies: {},
       pharmacyRef: null,
       markers: [{latitude: 13.70,
       longitude: 100.508},{latitude: 13.760502698226656,
@@ -396,9 +396,9 @@ export default {
   },
   methods: {
     async setDeliveryJob() {
-        await this.pharmacyRef.on('value', (snapshot) => {
+        this.pharmacyRef.on('value', (snapshot) => {
       if (snapshot !== undefined) {
-        this.pharmacy = snapshot.val();
+        this.pharmacies = snapshot.val();
       }
     });
        await this.deliveryJobRef.on('value', (snapshot) => {
@@ -412,17 +412,20 @@ export default {
       this.dynamic_padding = 130;
       this.new_markers = [this.new_markers[this.index]];
       this.updateStatus(index, stage);
+      // console.log(this.new_markers);;
     },
     pick_up(index, stage) {
       this.isPickUp = false;
       this.isDropOff = true;
       this.updateStatus(index, stage);
+      // console.log(this.new_markers);
     },
     dropoff(index, stage){
       alert('Thanks for your dedicated riding!');
-      this.ignore();
+      this.ignore(2);
       this.updateStatus(index, stage);
       this.makeMarkers();
+      // console.log(this.new_markers);;
     },
     setDistance(result) {
       this.distance = result.distance.toFixed(1);
@@ -433,7 +436,7 @@ export default {
         Object.entries(snapshot).forEach((key) => {
           if (key[0] === Object.keys(this.deliveryJob)[index]) {
             if (stage == 4) {
-              // this.deliveryJobRef.child(key[0]).remove();
+              console.log(his.deliveryJobRef.child(key[0]));
             }
             else {
             this.deliveryJobRef.child(key[0]).update({
@@ -446,50 +449,72 @@ export default {
     },
       makeMarkers() {
         if (this.deliveryJob) {
-          console.log('hi');
+          // console.log('hi');
             Object.entries(this.deliveryJob).forEach((key) => {
-                const [id, job] = key;
-                this.new_markers.push({
-                    destination:{
-                        latitude:job.toLocation.lat,
-                        longitude:job.toLocation.lng
-                    },
-                    waypoints: [{
-                        latitude:job.fromLocation.lat,
-                        longitude:job.fromLocation.lng
-                    }],
-                    name: this.getName(job.pharmacyId),
-                    pharmacyAddress:job.fromAddress,
-                    customerAddress:job.toAddress
-                });
+              const [id, job] = key;
+              const pharmacy_ = this.getName(job.pharmacyId);
+              //  console.log(job); 
+              //  console.log(job.pharmacyId); 
+              // console.log(pharmacy);
+              this.new_markers.push({
+                  destination:{
+                      latitude:job.toLocation.lat,
+                      longitude:job.toLocation.lng
+                  },
+                  waypoints: [{
+                      latitude:job.fromLocation.lat,
+                      longitude:job.fromLocation.lng
+                  }],
+                  name: pharmacy_,
+                  pharmacyAddress:job.fromAddress,
+                  customerAddress:job.toAddress
+              });
             });
         }
       },
       getName(p) {
-      let data = null;
-      // console.log(p);
-      Object.entries(this.pharmacy).forEach((key) => {
-        // console.log(key[0])
-        if (key[0] === p) {
-          data = key[1].name;
-        }
-      });
+        let data = "";
+        console.log('out');
+        // console.log(this.pharmacy);
+        Object.entries(this.pharmacies).forEach((key) => {
+          console.log('in');
+          // console.log(key[0]);
+          if (key[0] === p) {
+            data = key[1].name;
+          }
+        });
       return data;
     },
     close() {this.isUseCard = false; this.isClose = true; this.dynamic_padding = 0;},
-     open() {this.isUseCard = true; this.isClose = false; this.dynamic_padding = 130;},
-    ignore() {
-       this.isAccepted = false;
-       this.isDropOff = false;
-      this.isUseCard = false;
-    this.dynamic_padding = 0;
-      this.isUseDirection = false;
-      this.destination = null;
-      this.waypoints = [];
-      this.pharmacy ={};
-      this.pharmacy_name = ""
-      this.pharmacyAddress = "";
-      this.customerAddress = "";
+    open() {this.isUseCard = true; this.isClose = false; this.dynamic_padding = 130;},
+    ignore(n) {
+      if (n === 1){
+        this.isAccepted = false;
+        this.isDropOff = false;
+        this.isUseCard = false;
+        this.dynamic_padding = 0;
+        this.isUseDirection = false;
+        this.destination = null;
+        this.waypoints = [];
+        this.pharmacies ={};
+        this.pharmacy = null;
+        this.pharmacy_name = ""
+        this.pharmacyAddress = "";
+        this.customerAddress = "";
+      }
+      else {
+        this.isAccepted = false;
+        this.isDropOff = false;
+        this.isUseCard = false;
+        this.dynamic_padding = 0;
+        this.isUseDirection = false;
+        this.destination = null;
+        this.waypoints = [];
+        this.pharmacy = null;
+        this.pharmacy_name = ""
+        this.pharmacyAddress = "";
+        this.customerAddress = "";
+      }
     },
     handleGetDirection(marker,index) {
       this.isUseCard = true;
@@ -503,6 +528,7 @@ export default {
       this.index = index;
       this.pharmacyAddress = marker.pharmacyAddress.replace(',','').split(" ").slice(0,4).join(" ");
       this.customerAddress = marker.customerAddress.replace(',','').split(" ").slice(0,4).join(" ");
+      // console.log(this.new_markers);
     },
     
       onRegionChange(region) {
@@ -571,6 +597,15 @@ export default {
   bottom: 0;
   margin-bottom: 150;
 }
+/* .card{
+  background-color: rgb(255, 255, 255);
+  position: absolute;
+  border-radius: 10;
+  height: 250;
+  width: 100%;
+  padding: 24;
+  bottom: 0; */
+/* } */
 .card{
   background-color: rgb(255, 255, 255);
   position: absolute;
