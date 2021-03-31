@@ -1,12 +1,16 @@
 <template>
   <view class="container">
-    <text class="text-color-primary">My Vue Native App</text>
-    <button title="Press me!" @press="exclaim" />
+    <status/>
+    <!-- <text class="text-color-primary">My Vue Native App</text>
+    <button title="Press me!" @press="exclaim" /> -->
   </view>
 </template>
 
 <script>
+import status from './src/DeliveryStatus'
+
 export default {
+  components: { status },
   data() {
     return {
       message: '',
