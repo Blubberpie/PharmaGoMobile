@@ -9,20 +9,10 @@
 import Vue from 'vue-native-core';
 import { VueNativeBase } from 'native-base';
 import App from './index.vue';
-import {
-  Quasar,
-  QStepper,
-  QStep,
-} from 'quasar'
+
 // registering all native-base components to the global scope of the Vue
 Vue.use(VueNativeBase);
-Vue.use(Quasar, {
-  components: {
-    QStepper,
-    QStep,
-    QStepperNavigation
-  }
-})
+
 export default {
   components: { App },
 };

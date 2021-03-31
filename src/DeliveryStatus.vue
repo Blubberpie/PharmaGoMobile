@@ -1,7 +1,6 @@
 <template>
   <view>
     <ProgressSteps :activeStep="current"
-    :isComplete="complete"
     >
         <ProgressStep
         :removeBtnRow="true"
@@ -15,7 +14,6 @@
             <text> image </text>
         </view> -->
         </ProgressStep>
-        <!-- <Alert title="Thank you" message="your presciption has been delivered"> -->
     </ProgressSteps>
   </view>
 </template>
@@ -42,7 +40,7 @@ export default {
   data() {
     return {
       current: 0,
-      complete: false,
+      // complete: false,
       
       steps: [
         { name: 'Finding Driver' },
@@ -54,7 +52,7 @@ export default {
   methods: {
     stepComplete(step) {
       if (this.current > step+1) {
-        this.complete=true;
+        // this.complete=true;
         Alert.alert("Thank you for ordering, your presciption has been delivered")
         // this.navigation.navigate('Home')
       }
