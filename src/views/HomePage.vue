@@ -3,7 +3,6 @@
     <text class="header">PharmaGo </text>
     <view v-if="role === 'Customer'">
       <view class="row" style="background-color: #0099ff">
-        <!-- <button title="Map Page " @press="toMapPage" /> -->
         <touchable-opacity :on-press="() => toMapPage()">
           <view>
             <text class="text">Choose Pharmacy</text>
@@ -11,7 +10,6 @@
         </touchable-opacity>
       </view>
       <view class="row" style="background-color: #0066ff">
-        <!-- <button title="to ListChat " @press="toListChat" /> -->
         <touchable-opacity :on-press="() => toListChat()">
           <view>
             <text class="text">Chats </text>
@@ -19,10 +17,6 @@
         </touchable-opacity>
       </view>
       <view class="row" style="background-color: #0052cc">
-        <!-- <button
-          title="Pending Prescriptions "
-          @press="toPendingPrescriptions"
-        /> -->
         <touchable-opacity :on-press="() => toPendingPrescriptions()">
           <view>
             <text class="text">Pending Prescriptions </text>
@@ -41,7 +35,6 @@
         </touchable-opacity>
       </view>
       <view class="row" style="background-color: #000099">
-        <!-- <button title="Log out " @press="logout" /> -->
         <touchable-opacity :on-press="() => logout()">
           <view>
             <text class="text">Sign Out </text>
@@ -50,7 +43,6 @@
       </view>
     </view>
     <view v-else>
-      <!-- <button title="Driver Map Page" @press="toDriverMapPage" /> -->
       <view class="row" style="background-color: #0099ff">
         <touchable-opacity :on-press="() => toDriverMapPage()">
           <view>
@@ -59,7 +51,6 @@
         </touchable-opacity>
       </view>
       <view class="row" style="background-color: #0066ff">
-        <!-- <button title="Log out " @press="logout" /> -->
         <touchable-opacity :on-press="() => logout()">
           <view>
             <text class="text">Sign Out </text>
@@ -128,7 +119,6 @@ export default {
         .then(() => {
           this.navigation.navigate('Login');
           alert('You have been logged off');
-          // Sign-out successful.
         })
         .catch((error) => {
           console.log(error);
@@ -140,7 +130,6 @@ export default {
         .ref(`user/${this.uid}/credentials/role`)
         .once('value')
         .then((snapshot) => {
-          console.log(snapshot.val(), 'role');
           this.role = snapshot.val();
         });
     },
@@ -156,9 +145,6 @@ export default {
 
 <style>
 .container {
-  /* background-color: white;
-  align-items: center;
-  justify-content: center; */
   flex: 1;
 }
 .text-color-primary {
@@ -167,17 +153,13 @@ export default {
 .header {
   padding: 40px;
   text-align: center;
-  /* background-color: #1976d2; */
   background-color: white;
   color: #1976d2;
   font-size: 30px;
 }
 .row {
   flex-direction: row;
-  /* align-items: center; */
   justify-content: space-evenly;
-  /* justify-content: center; */
-  /* border-radius: 40; */
   padding: 50;
 }
 .text {
@@ -185,7 +167,6 @@ export default {
   color: white;
 }
 .button {
-  /* border: 50; */
   flex: 1;
 }
 </style>

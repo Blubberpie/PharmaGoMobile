@@ -20,6 +20,7 @@ import PendingPrescriptions from './src/components/PendingPrescriptions.vue';
 import DriverMap from './src/components/DriverMap.vue';
 import Login from './src/views/Login.vue';
 import Statuses from './src/views/DeliveryStatuses.vue';
+import RegisterPage from './src/views/Register.vue';
 
 const StackNavigator = createStackNavigator(
   {
@@ -31,6 +32,7 @@ const StackNavigator = createStackNavigator(
     Driver: DriverMap,
     Login,
     Statuses,
+    Register: RegisterPage,
   },
   {
     initialRouteName: 'Login',
