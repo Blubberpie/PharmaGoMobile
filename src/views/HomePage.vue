@@ -47,9 +47,18 @@
           </view>
         </touchable-opacity>
       </view>
+      <view class="row" style="background-color: #0066ff">
+        <!-- <button title="Log out " @press="logout" /> -->
+        <touchable-opacity :on-press="() => logout()">
+          <view>
+            <text class="text">Sign Out </text>
+          </view>
+        </touchable-opacity>
+      </view>
     </view>
 
     <button title="Login" @press="login" />
+    <button title="test" @press="test" />
   </view>
 </template>
 
@@ -58,10 +67,10 @@
 // import React, { Component } from 'react';
 import { View, Dimensions, Text, TouchableOpacity, Header } from 'react-native';
 
-// import firebase from 'firebase/app';
-// import 'firebase/database';
+import firebase from 'firebase/app';
+import 'firebase/database';
 
-// const database = firebase.database();
+const database = firebase.database();
 
 export default {
   // components: { Header },
@@ -72,16 +81,18 @@ export default {
   },
   data() {
     return {
-      message: '',
-
       username: 'mock username',
       uid: '',
-      role: 'Customer',
+      role: null,
     };
   },
   mounted() {
-    this.message = 'Hello World'; // testing mounted
-    // let user = firebase.auth().currentUser;
+    this.uid = firebase.auth().currentUser.uid;
+    this.setRole();
+    if (this.role === 'Pharmacy') {
+      alert('Features not avaliable for user with Pharmacy role');
+      this.logout();
+    }
   },
   methods: {
     toMapPage() {
@@ -100,7 +111,30 @@ export default {
       this.navigation.navigate('Login');
     },
     logout() {
-      alert('logout');
+      firebase
+        .auth()
+        .signOut()
+        .then(() => {
+          this.navigation.navigate('Login');
+          alert('You have been logged off');
+          // Sign-out successful.
+        })
+        .catch((error) => {
+          console.log(error);
+          alert('An error has occured');
+        });
+    },
+    async setRole() {
+      await database
+        .ref(`user/${this.uid}/credentials/role`)
+        .once('value')
+        .then((snapshot) => {
+          console.log(snapshot.val(), 'role');
+          this.role = snapshot.val();
+        });
+    },
+    test() {
+      console.log(this.role);
     },
   },
 };

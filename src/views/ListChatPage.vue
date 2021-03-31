@@ -38,8 +38,8 @@ export default {
       testing: '',
       database: null,
 
-      username: 'pharmacy1',
-      uid: 'GVvPLsMTwoNdjt6r4J3F6NDvgwl1',
+      username: '',
+      uid: '',
       testing: '',
     };
   },
@@ -128,6 +128,7 @@ export default {
     },
   },
   async mounted() {
+    this.uid = firebase.auth().currentUser.uid;
     await this.setUsername();
     await this.setAllRooms();
   },

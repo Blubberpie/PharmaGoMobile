@@ -17,13 +17,9 @@
       label="Password"
       mode="outlined"
       :value="password"
-      :onChangeText="(text) => setEmail(text)"
+      :onChangeText="(text) => setPassword(text)"
     />
-    <PButton mode="contained"
-      :onPress="login"
-    >
-      Login
-    </PButton>
+    <PButton mode="contained" :onPress="login"> Login </PButton>
   </View>
 </template>
 
@@ -88,7 +84,7 @@ export default {
             },
             (err) => {
               this.errorMessage = err.message;
-            },
+            }
           );
       } else {
         this.errorMessage = 'Cannot be empty!';

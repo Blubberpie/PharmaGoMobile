@@ -1,14 +1,6 @@
 <template>
   <view>
     <view class="header">
-      <!-- <image :source="require('../../assets/user-male.png')" class="profile-pic"/> -->
-      <!-- <ion-icon name="arrow-back-outline"></ion-icon> -->
-      <!-- <touchable-opacity :on-press="()=>test()">
-            <view  class="button-view">
-              <text class="color-white">back</text>
-            </view>
-      </touchable-opacity>  -->
-      <!-- <Button icon='arrow-left' :on-press="()=>test()"> back</Button> -->
       <text class="username">
       {{ from }}
       <text>
@@ -55,8 +47,8 @@ export default {
   data() {
     return {
       roomID: '',
-      from: 'sickperson1',
-      username: "pharmacy1",
+      from: '',
+      username: "",
       name: null,
       showMessage: '',
       messages: [],
@@ -137,15 +129,35 @@ export default {
       });
       this.messages = messages;
     },
-    back() {
-      this.navigation.navigate('ListChat');
+    async setUsername() {
+      const username = await firebase
+        .database()
+        .ref(`user/${this.uid}/credentials/username`)
+        .once('value')
+        .then((snapshot) => snapshot.val());
+      this.username = username;
     },
-    test() {
-      
-    }
+    async setOtherRoomMember() {
+      let members = {};
+      await firebase
+        .database()
+        .ref(`messages/chatRooms/${this.roomID}/members`)
+        .once('value')
+        .then((snapshot) => {
+          const obj = snapshot.val();
+          members = Object.values(obj);
+        });
+      const otherMember = members.filter(
+        (member) => member !== this.username
+      )[0];
+      this.from = otherMember;
+    },
   },
   async mounted() {
     this.roomID = this.navigation.state.params.id;
+    this.uid = firebase.auth().currentUser.uid;
+    await this.setUsername();
+    await this.setOtherRoomMember();
     firebase
         .database()
         .ref(`messages/chatRooms/${this.roomID}/messages`)
