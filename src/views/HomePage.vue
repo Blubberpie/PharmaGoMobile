@@ -47,9 +47,18 @@
           </view>
         </touchable-opacity>
       </view>
+      <view class="row" style="background-color: #0066ff">
+        <!-- <button title="Log out " @press="logout" /> -->
+        <touchable-opacity :on-press="() => logout()">
+          <view>
+            <text class="text">Sign Out </text>
+          </view>
+        </touchable-opacity>
+      </view>
     </view>
 
     <button title="Login" @press="login" />
+    <button title="test" @press="test" />
   </view>
 </template>
 
@@ -72,15 +81,18 @@ export default {
   },
   data() {
     return {
-      message: '',
       username: 'mock username',
       uid: '',
-      role: 'Customer',
+      role: null,
     };
   },
   mounted() {
-    this.message = 'Hello World'; // testing mounted
     this.uid = firebase.auth().currentUser.uid;
+    this.setRole();
+    if (this.role === 'Pharmacy') {
+      alert('Features not avaliable for user with Pharmacy role');
+      this.logout();
+    }
   },
   methods: {
     toMapPage() {
@@ -112,9 +124,18 @@ export default {
           alert('An error has occured');
         });
     },
-    // test() {
-    //   console.log(this.uid);
-    // },
+    async setRole() {
+      await database
+        .ref(`user/${this.uid}/credentials/role`)
+        .once('value')
+        .then((snapshot) => {
+          console.log(snapshot.val(), 'role');
+          this.role = snapshot.val();
+        });
+    },
+    test() {
+      console.log(this.role);
+    },
   },
 };
 </script>
