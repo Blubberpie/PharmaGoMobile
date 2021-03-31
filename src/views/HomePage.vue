@@ -1,6 +1,7 @@
 <template>
   <view class="container">
-    <text class="text-color-primary">Home Page</text>
+    <!-- <status-bar background-color="blue" bar-style="light-content" /><view> -->
+    <text class="header">Home</text>
     <button title="Press me!" @press="exclaim" />
     <button title="Map Page" @press="toMapPage" />
     <button title="Pending Prescriptions" @press="toPendingPrescriptions" />
@@ -12,7 +13,17 @@
 </template>
 
 <script>
+import { Appbar } from 'react-native-paper';
+import React from 'react';
+import { View, Dimensions, Text, TouchableOpacity, Header } from 'react-native';
+
+import firebase from 'firebase/app';
+import 'firebase/database';
+
+const database = firebase.database();
+
 export default {
+  components: { Appbar },
   props: {
     navigation: {
       type: Object,
@@ -21,15 +32,15 @@ export default {
   data() {
     return {
       message: '',
+
+      username: 'mock username',
+      uid: '',
+      role: '',
     };
   },
   mounted() {
     this.message = 'Hello World'; // testing mounted
-  },
-  props: {
-    navigation: {
-      type: Object,
-    },
+    // let user = firebase.auth().currentUser;
   },
   methods: {
     exclaim() {
@@ -61,12 +72,19 @@ export default {
 
 <style>
 .container {
-  background-color: white;
+  /* background-color: white;
   align-items: center;
-  justify-content: center;
+  justify-content: center; */
   flex: 1;
 }
 .text-color-primary {
   color: blue;
+}
+.header {
+  padding: 60px;
+  text-align: center;
+  background-color: lightblue;
+  color: white;
+  font-size: 30px;
 }
 </style>
