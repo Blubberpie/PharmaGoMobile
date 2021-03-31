@@ -5,7 +5,6 @@
     <button title="Map Page" @press="toMapPage" />
     <button title="Pending Prescriptions" @press="toPendingPrescriptions" />
     <button title="to ListChat" @press="toListChat" />
-    <button title="Drvier Page" @press="toDriverPage" />
   </view>
 </template>
 
