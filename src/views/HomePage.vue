@@ -5,6 +5,7 @@
     <button title="Map Page" @press="toMapPage" />
     <button title="Pending Prescriptions" @press="toPendingPrescriptions" />
     <button title="to ListChat" @press="toListChat" />
+    <button title="Drvier Page" @press="toDriverPage" />
   </view>
 </template>
 
@@ -23,11 +24,6 @@ export default {
   mounted() {
     this.message = 'Hello World'; // testing mounted
   },
-  props: {
-    navigation: {
-      type: Object,
-    },
-  },
   methods: {
     exclaim() {
       this.message += '!';
@@ -42,6 +38,9 @@ export default {
     },
     toListChat() {
       this.navigation.navigate('ListChat');
+    },
+    toDriverPage() {
+      this.navigation.navigate('Driver');
     },
   },
 };
