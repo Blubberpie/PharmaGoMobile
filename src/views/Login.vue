@@ -1,91 +1,105 @@
 <template>
-  <nb-container v-if="loaded" :style="{backgroundColor: '#fff'}">
-      <nb-header>
-        <nb-body>
-          <nb-title>
-            Login
-          </nb-title>
-        </nb-body>
-      </nb-header>
-      <nb-content padder>
-        <nb-form>
-            <nb-item :error="(!$v.emailValue.required || !$v.emailValue.email ) && $v.emailValue.$dirty">
-              <nb-input placeholder="Email" v-model="emailValue" auto-capitalize="none" :on-blur="() => $v.emailValue.$touch()"/>
-            </nb-item>
-            <nb-item last :error="!$v.password.required && $v.password.$dirty">
-              <nb-input placeholder="Password" v-model="password" auto-capitalize="none" secure-text-entry :on-blur="() => $v.password.$touch()" />
-            </nb-item>
-          </nb-form>
-          <view :style="{marginTop:10}">
-            <nb-button block :on-press="login">
-              <nb-spinner v-if="logging_in" size="small" />
-              <nb-text>Login </nb-text>
-            </nb-button>
-          </view>
-      </nb-content>
-  </nb-container>
+  <View :style="styles.container">
+    <Title :style="styles.title">Login</Title>
+    <Text v-if="errorMessage">{{ errorMessage }}</Text>
+    <TextInput
+      :style="styles.textInput"
+      label="Email"
+      mode="outlined"
+      :error="errorMessage"
+      :value="email"
+      :onChangeText="(text) => setEmail(text)"
+    />
+    <TextInput
+      :style="styles.textInput"
+      :secureTextEntry="true"
+      :error="errorMessage"
+      label="Password"
+      mode="outlined"
+      :value="password"
+      :onChangeText="(text) => setEmail(text)"
+    />
+    <PButton mode="contained"
+      :onPress="login"
+    >
+      Login
+    </PButton>
+  </View>
 </template>
 
 <script>
-import { Badge } from 'react-native-paper';
-import React, { Component } from 'react';
-import { View, Dimensions, Text, TouchableOpacity } from 'react-native';
-
 import firebase from 'firebase/app';
 import 'firebase/database';
+
+import { Title, TextInput, Button } from 'react-native-paper';
+import { StyleSheet } from 'react-native';
+
+const database = firebase.database();
+
+const styles = StyleSheet.create({
+  container: {
+    ...StyleSheet.absoluteFillObject,
+    paddingTop: 140,
+    paddingLeft: '20%',
+    paddingRight: '20%',
+    alignItems: 'center',
+  },
+  title: {
+    fontSize: 30,
+    fontWeight: 'bold',
+    paddingBottom: 30,
+  },
+  textInput: {
+    width: '100%',
+    marginBottom: 30,
+  },
+});
 
 export default {
   props: {
     navigation: {
-      type: Object
-    }
-  },
-  computed: {
-    logging_in () {
-      return store.state.logging_in;
-    }
-  },
-  validations: {
-    emailValue: {
-      required,
-      email
+      type: Object,
     },
-    password: {
-      required
-    }
   },
-  data: function() {
+  components: {
+    Title,
+    TextInput,
+    PButton: Button,
+  },
+  data() {
     return {
-      emailValue: '',
+      email: '',
       password: '',
-      loaded: false
+      errorMessage: '',
+      styles,
     };
   },
-  created() {
-    AsyncStorage.getItem('email').then((val) => {
-      if (val) {
-        this.loaded = true
-        this.navigation.navigate('Home')
-        store.dispatch('SET_USER', {userObj: {email: val}})
-      } else {
-        this.loaded = true
-      }
-    })
-  },
   methods: {
-    login() {
-      if (this.emailValue && this.password && !this.$v.emailValue.$invalid) {
-        store.dispatch('LOGIN', {
-          userObj: {email: this.emailValue},
-          navigate: this.navigation.navigate
-        });
+    async login() {
+      if (this.email && this.password) {
+        await firebase
+          .auth()
+          .signInWithEmailAndPassword(this.email, this.password)
+          .then(
+            (userCredential) => {
+              const { user } = userCredential;
+              this.userCredRef = database.ref(`/user/${user.uid}/credentials/`);
+              this.navigation.navigate('Home');
+            },
+            (err) => {
+              this.errorMessage = err.message;
+            },
+          );
       } else {
-        Toast.show({
-          text: 'Invalid Email or Password',
-          buttonText: 'Okay'
-        })
+        this.errorMessage = 'Cannot be empty!';
       }
-    }
-  }
+    },
+    setEmail(email) {
+      this.email = email;
+    },
+    setPassword(password) {
+      this.password = password;
+    },
+  },
 };
 </script>

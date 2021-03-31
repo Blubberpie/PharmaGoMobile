@@ -18,6 +18,7 @@ import HomePage from './src/views/HomePage.vue';
 import CustomerMap from './src/components/CustomerMap.vue';
 import PendingPrescriptions from './src/components/PendingPrescriptions.vue';
 import DriverMap from './src/components/DriverMap.vue';
+import Login from './src/views/Login.vue';
 
 const StackNavigator = createStackNavigator(
   {
@@ -27,6 +28,7 @@ const StackNavigator = createStackNavigator(
     CustomerMap,
     PendingPrescriptions,
     Driver: DriverMap,
+    Login,
   },
   {
     initialRouteName: 'Home',

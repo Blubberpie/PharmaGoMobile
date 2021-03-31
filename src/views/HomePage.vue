@@ -6,6 +6,7 @@
     <button title="Pending Prescriptions" @press="toPendingPrescriptions" />
     <button title="to ListChat" @press="toListChat" />
     <button title="Drvier Page" @press="toDriverPage" />
+    <button title="Login" @press="toLogin" />
   </view>
 </template>
 
@@ -41,6 +42,9 @@ export default {
     },
     toDriverPage() {
       this.navigation.navigate('Driver');
+    },
+    toLogin() {
+      this.navigation.navigate('Login');
     },
   },
 };
