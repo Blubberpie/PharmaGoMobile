@@ -8,6 +8,7 @@
           showsUserLocation
           :custom-map-style="customMap"
       >
+      <text :style="{fontSize:1}">{{new_markers}}</text>
       <map-marker
         v-for="(marker,index) in new_markers"
         :key="index"
@@ -107,7 +108,13 @@
         <!-- OPEN TOOLBAR -->
         <touchable-opacity v-if="isClose" :on-press="open" :style="{backgroundColor:'rgba(105,105,105, 0.3)',padding:10,borderRadius:20,marginTop:20,alignItems:'center'}">
             <text :style="{color:'white',fontWeight:'bold'}">open</text>
-          </touchable-opacity>
+        </touchable-opacity>
+        <!-- Sign out -->
+        <touchable-opacity v-if="!isClose" :on-press="logout" :style="{backgroundColor:'rgba(255,0,0, 0.3)',width:100,height:40,padding:10,borderRadius:20,marginTop:20,alignItems:'center'}">
+          <view>
+            <text :style="{color:'red'}">Sign Out </text>
+          </view>
+        </touchable-opacity>
         <!-- DROP-OFF STAGE -->
         <view class='card' v-if="isDropOff && isUseCard">
           <view :style="{marginBottom:20}">
@@ -406,6 +413,19 @@ export default {
         this.makeMarkers();
     });
     },
+    logout() {
+      firebase
+        .auth()
+        .signOut()
+        .then(() => {
+          this.navigation.navigate('Login');
+          alert('You have been logged off');
+        })
+        .catch((error) => {
+          console.log(error);
+          alert('An error has occured');
+        });
+    },
     accept(index, stage) {
       this.isAccepted = false;
       this.isPickUp = true;
@@ -435,18 +455,9 @@ export default {
       this.deliveryJobRef.transaction((snapshot) => {
         Object.entries(snapshot).forEach((key) => {
           if (key[0] === Object.keys(this.deliveryJob)[index]) {
-            if (stage == 4 && key[0] !== undefined) {
-              // console.log(key[0]);
-              // console.log(Object.keys(this.deliveryJob)[index]);
-              // console.log( database.ref(`deliveryJobs/${key[0]}/status/`));
-              database.ref(`deliveryJobs/dummy/a`).remove();
-              // console.log(this.deliveryJobRef.child(key[0]));
-            }
-            else {
             this.deliveryJobRef.child(key[0]).update({
               status: stage,
             });
-            }
           }
         });
       });
@@ -455,7 +466,9 @@ export default {
         if (this.deliveryJob) {
             Object.entries(this.deliveryJob).forEach((key) => {
               const [id, job] = key;
-              if (job.status !== 4) {
+              console.log(job.status);
+              if (job.status != 4) {
+                console.log(job.status);
               const pharmacy_ = this.getName(job.pharmacyId);
               this.new_markers.push({
                   destination:{
@@ -605,3 +618,4 @@ export default {
   bottom: 0;
 }
 </style>
+
